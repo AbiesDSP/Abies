@@ -19,3 +19,9 @@ Open Source, Real Time, Digital Audio Effects Framkework
 ## Info
 
 Traces are generated inside the build folder.
+
+Add these lines to c_cpp_properties include path in VSCode to remove the squiggles.
+
+    "actual-verilator-location/include",
+    "${workspaceFolder}/build/vinclude"
+    
