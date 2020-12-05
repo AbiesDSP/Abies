@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.17)
+project(abies)
+
+# Locate verilator
+find_package(verilator HINTS $ENV{VERILATOR_ROOT} ${VERILATOR_ROOT})
+if (NOT verilator_FOUND)
+    message(FATAL_ERROR "Verilator not found. Install Verilator, or set VERILATOR_ROOT environment variable")
+else()
+    message(STATUS "Using Verilator found in $ENV{VERILATOR_ROOT}")
+endif()
+
+# Locate CppUTest
+if (DEFINED ENV{CPPUTEST_HOME})
+    message(STATUS "Using CppUTest found in $ENV{CPPUTEST_HOME}")
+else()
+    message(FATAL_ERROR "CPPUTEST_HOME is not set.")
+    return()
+endif()
+
+add_subdirectory(util)
+add_subdirectory(src)
+add_subdirectory(tests)
