@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(abies)
 
 # Locate verilator
@@ -18,5 +18,6 @@ else()
 endif()
 
 add_subdirectory(util)
-add_subdirectory(src)
+add_subdirectory(abies-lib)
+# add_subdirectory(framework)
 add_subdirectory(tests)

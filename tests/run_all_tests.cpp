@@ -2,6 +2,7 @@
 #include "CppUTest/CommandLineTestRunner.h"
 
 IMPORT_TEST_GROUP(Counter);
+IMPORT_TEST_GROUP(Buffer);
 
 int main(int argc, char** argv)
 {
