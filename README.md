@@ -13,7 +13,9 @@ Open Source, Real Time, Digital Audio Effects Framkework
     mkdir build && cd build
     cmake ..
     make
-    ./tests/RunAllTests
+    ./tests/run_all_tests
+
+    python -m abies
 
 
 ## Info
