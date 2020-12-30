@@ -1,5 +1,3 @@
-set(TRACE_DIR ${CMAKE_BINARY_DIR}/traces/${MODULE_GROUP})
-
 # All include paths and calls needed to create a "testbench"
 function(add_vmodule_tb TB_NAME VMOD_NAME VFILE_NAME VARGS)
     # Add est Library. Include verilator root and vinclude dir.
@@ -7,10 +5,9 @@ function(add_vmodule_tb TB_NAME VMOD_NAME VFILE_NAME VARGS)
     message(STATUS "Add library: ${TB_NAME}")
 
     # Create trace directories when libraries are built
-    set(TRACE_DIR traces/${TB_NAME})
     add_custom_command(TARGET ${TB_NAME}
         POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/${TRACE_DIR}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/traces/${TB_NAME}
         COMMENT "Creating ${TB_NAME} trace directory: ${TRACE_DIR}...")
 
     message(STATUS "Verilating ${TB_NAME} using ${VFILE_NAME} with parameters: ${VARGS}")

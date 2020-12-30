@@ -6,8 +6,11 @@ Open Source, Real Time, Digital Audio Effects Framkework
 - Verilator
 - CppUTest (Test framework)
 - GTKWave (Viewing waveforms)
+- Vivado
 
     Make sure these are installed and their env variables are set.
+
+    On Ubuntu/wsl, run "sudo apt install libtinfo5" if vivado crashes
 
 ## Build and Test
     mkdir build && cd build

@@ -12,6 +12,8 @@ target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
 # Link test runners here.
 add_test(counter)
 add_test(buffer)
+add_test(sram_arbiter)
+add_test(pwm)
 
 # Link to CppUTest Libraries.
 target_link_libraries(run_all_tests PRIVATE CppUTest CppUTestExt)
