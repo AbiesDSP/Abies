@@ -13,7 +13,7 @@ module sram_arbiter #(
     input wire [dw-1:0] data_wr,    //! data input
     output wire [dw-1:0] data_rd,   //! data output
     input wire ena,                 //! enable
-    output reg busya,              //! busy
+    output wire busya,              //! busy
     input wire wea,                 //! write enable
     output reg valida,              //! read valid
     // sram phy interface

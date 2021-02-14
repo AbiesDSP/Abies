@@ -1,0 +1,26 @@
+# Default configuration file. Modify this file or specify a different file on the command line.
+vivado_location: "/tools/Xilinx/Vivado/"
+vivado_version: "2020.2"
+work_root: "build/"
+tool: vivado
+synth_tool: vivado
+part_family: xc7
+part: xc7a35tcpg236-1
+source_mgmt_mode: All
+
+project_name: abies
+top_module: abies_top
+
+framework:
+  src:
+    - framework/abies_top.v
+    - framework/blinky.v
+    - framework/pwm/pwm.v
+    - framework/sram_arbiter/sram_arbiter.v
+  constraints:
+    - framework/cmoda7.xdc
+
+abies_lib:
+  modules:
+    - buffer
+    - counter
