@@ -13,12 +13,12 @@ top_module: abies_top
 
 framework:
   src:
-    - framework/abies_top.v
-    - framework/blinky.v
-    - framework/pwm/pwm.v
-    - framework/sram_arbiter/sram_arbiter.v
+    - abies/framework/abies_top.v
+    - abies/framework/blinky.v
+    - abies/framework/pwm/pwm.v
+    - abies/framework/sram_arbiter/sram_arbiter.v
   constraints:
-    - framework/cmoda7.xdc
+    - abies/framework/cmoda7.xdc
 
 abies_lib:
   modules:

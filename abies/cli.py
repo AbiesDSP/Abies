@@ -13,18 +13,19 @@ def main():
 
     sp_command = parser.add_subparsers(metavar="command",dest="command")
 
-    # Choose from main commands "configure, test, etc."
+    # Choose from main commands "build, test, etc."
     sp_build = sp_command.add_parser(
         'build',
         help="Generates build scripts."
     )
+    # Specify config file
     sp_build.add_argument(
         '--config',
         action='store',
         help="Specify project config.yml file.",
         default=None,
         required=False,
-        metavar="Project config file."
+        metavar='config_file'
     )
     sp_build.add_argument(
         '--scripts_only',
@@ -40,29 +41,6 @@ def main():
         help="Run tests."
     )
     sp_test.set_defaults(func=my_test)
-
-    # command_group = parser.add_mutually_exclusive_group(required=True)
-    # command_group.add_argument(
-    #     'configure',
-    #     action='store',
-    #     help="Configure build scripts."
-    # )
-    # command_group.add_argument(
-    #     'test',
-    #     action='store',
-    #     help="Run tests."
-    # )
-    # parser.add_argument(
-    #     '--test',
-    #     action='store_true',
-    #     dest='test',
-    #     default=None,
-    #     help="Run tests on abies"
-    # )
-    # parser.add_argument(
-    #     'configure',
-    #     action=
-    # )
 
     args = parser.parse_args()
     try:
