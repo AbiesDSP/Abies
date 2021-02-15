@@ -1,5 +1,6 @@
 """ Command Line Interface """
 import argparse
+from genericpath import exists
 import os, sys
 from os import path
 import importlib.resources as pkg_resources
@@ -13,19 +14,36 @@ from . import framework
 def my_test(args):
     return
 
+# Creates a new project in a local directory. Copies the framework, and creates
 def new_project(args):
+    # Create new directory, or reused existing directory.
+    if os.path.exists(args.project_name):
+        if os.path.isdir(args.project_name):
+            base_project = os.path.join(os.getcwd(), args.project_name)
+        else:
+            print("Error:" + args.project_name + "exists and is not a directory.")
+            return 0
+    else:
+        if os.path.basename(os.getcwd()) == args.project_name:
+            base_project = os.getcwd()
+        else:
+            base_project = os.path.join(os.getcwd(), args.project_name)
+            os.makedirs(base_project, exist_ok=True)
+    
     # Generate config file from template
-    with pkg_resources.open_text(resources, "config.yml") as config_file:
-        d = {'project_name' : args.project_name}
-        config_template = Template(config_file.read())
-        # replace project name 
-        result = config_template.substitute(d)
-        with open("config.yml", 'w') as user_config:
-            user_config.write(result)
-    # Copy framework files to build directory.
-    os.makedirs("framework", exist_ok=True)
+    if os.path.exists(os.path.join(base_project, 'config.yml')) == False:
+        with pkg_resources.open_text(resources, "config.yml") as config_file:
+            d = {'project_name' : args.project_name}
+            config_template = Template(config_file.read())
+            # replace project name 
+            result = config_template.substitute(d)
+            with open(os.path.join(base_project, "config.yml"), 'w') as user_config:
+                user_config.write(result)
+
+    # Copy framework files to build directory. Always overwrites.
+    os.makedirs(os.path.join(base_project, "framework"), exist_ok=True)
     banlist =  ['__pycache__', '__init__.py']
-    base_fw = os.path.join(os.getcwd(), 'framework')
+    base_fw = os.path.join(base_project, 'framework')
 
     # Copy all framework files to a local folder
     for content in pkg_resources.contents(framework):
@@ -39,24 +57,8 @@ def new_project(args):
                         shutil.copy(os.path.join(x, file), os.path.join(base_fw, os.path.basename(x), file))
                 else:
                     shutil.copy(x, os.path.join(base_fw, os.path.basename(x)))
-                    # os.makedirs("framework/" + os.path.basename(x), exist_ok=True)
-                # print(pkgutil.get_data(__name__, "content"))
-                # print(str(x) + str(os.path.isdir(x)))
-    # print(framework)
-    # print(pkg_resources.resource_isdir('framework', 'pwm'))
 
-    # for stuff in pkg_resources.resource_listdir('framework', 'pwm'):
-    #     print(stuff + "isdir?" + str(pkg_resources.resource_isdir('framework', stuff)))
-    #     if stuff not in banlist:
-    #         print(pkg_resources.resource_filename('framework', stuff))
-    #             # shutil.copy(stuff_path, "framework")
-    #             # print(stuff_path)
-    #     else:
-    #         print("ban: " + stuff)
-
-    return
-
-
+# Main program interface
 def main():
     # Set up argument parsing
     parser = argparse.ArgumentParser(prog="abies", description="Abies Audio Processing Framework")
