@@ -7,18 +7,26 @@ Open Source, Real Time, Digital Audio Effects Framkework
 - CppUTest (Test framework)
 - GTKWave (Viewing waveforms)
 - Vivado
+- Edalize
 
     Make sure these are installed and their env variables are set.
 
     On Ubuntu/wsl, run "sudo apt install libtinfo5" if vivado crashes
 
 ## Build and Test
-    mkdir build && cd build
-    cmake ..
-    make
-    ./tests/run_all_tests
+    # Install symbolic link
+    $ cd abies
+    $ python -m pip install -e .
+    
+Create a new abies project
 
-    python -m abies
+    $ cd some_directory
+    $ python -m abies new --project foo
+
+Create a new module
+
+    $ cd project_dir
+    $ python -m abies new --module bar
 
 
 ## Info
