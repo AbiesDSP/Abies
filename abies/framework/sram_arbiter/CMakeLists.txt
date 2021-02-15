@@ -1,4 +1,6 @@
 # Add est Library. Include verilator root and vinclude dir.
+message("Current List Dir: ${CMAKE_CURRENT_LIST_DIR}")
+
 add_library(sram_arbiter SHARED ${CMAKE_SOURCE_DIR}/framework/sram_arbiter/sram_arbiter.cpp)
 message(STATUS "Add framework library: sram_arbiter")
 

@@ -1,4 +1,6 @@
 # Add est Library. Include verilator root and vinclude dir.
+message("Current List Dir: ${CMAKE_CURRENT_LIST_DIR}")
+
 add_library(pwm SHARED ${CMAKE_SOURCE_DIR}/framework/pwm/pwm.cpp)
 message(STATUS "Add framework library: pwm")
 
@@ -25,3 +27,4 @@ target_include_directories(pwm PUBLIC ${CMAKE_SOURCE_DIR}/framework)
 target_include_directories(pwm PUBLIC ${CMAKE_BINARY_DIR}/vinclude)
 # Link to testbench lib by default.
 target_link_libraries(pwm PUBLIC testbench)
+

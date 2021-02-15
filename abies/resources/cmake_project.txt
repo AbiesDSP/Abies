@@ -1,0 +1,39 @@
+cmake_minimum_required(VERSION 3.16)
+project(${project_name})
+
+# Locate verilator
+find_package(verilator HINTS $ENV{VERILATOR_ROOT} ${VERILATOR_ROOT})
+if (NOT verilator_FOUND)
+    message(FATAL_ERROR "Verilator not found. Install Verilator, or set VERILATOR_ROOT environment variable")
+else()
+    message(STATUS "Using Verilator found in $ENV{VERILATOR_ROOT}")
+endif()
+
+# Locate CppUTest
+if (DEFINED ENV{CPPUTEST_HOME})
+    message(STATUS "Using CppUTest found in $ENV{CPPUTEST_HOME}")
+else()
+    message(FATAL_ERROR "CPPUTEST_HOME is not set.")
+    return()
+endif()
+
+# Util Libraries
+add_subdirectory(util)
+
+set(ALL_TEST_GROUPS "")
+macro(add_module the_module)
+    add_subdirectory(${the_module})
+    list(APPEND ALL_TEST_GROUPS test_${the_module})
+endmacro()
+
+# Include all modules here. Copy the following line
+# add_module(module_name)
+
+# Main test runner.
+add_executable(run_all_tests ${CMAKE_SOURCE_DIR}/run_all_tests.cpp)
+target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
+
+
+target_link_libraries(run_all_tests PRIVATE ${ALL_TEST_GROUPS})
+# Link to CppUTest Libraries.
+target_link_libraries(run_all_tests PRIVATE CppUTest CppUTestExt)

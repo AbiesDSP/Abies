@@ -1,0 +1,37 @@
+# Add ext Library. Include verilator root and vinclude dir.
+add_library(${module_name} SHARED ${CMAKE_CURRENT_LIST_DIR}/${module_name}.cpp)
+message(STATUS "Add src library: ${module_name}")
+
+# Create trace directories when libraries are built
+add_custom_command(TARGET ${module_name}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/traces/${module_name}
+    COMMENT "Creating trace directory: ${CMAKE_BINARY_DIR}/traces/${module_name}")
+
+message(STATUS "Verilating ${module_name} using ${module_name}.v")
+
+set(V_SRCS "")
+list(APPEND V_SRCS "${CMAKE_CURRENT_LIST_DIR}/${module_name}.v")
+
+verilate(${module_name} COVERAGE TRACE
+    INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}
+    SOURCES ${V_SRCS}
+    DIRECTORY ${CMAKE_BINARY_DIR}/vinclude
+    PREFIX V${module_class}
+    VERILATOR_ARGS ""
+)
+# For source modules
+target_include_directories(${module_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(${module_name} PUBLIC ${CMAKE_BINARY_DIR}/vinclude)
+
+# Link to util libraries by default.
+set(UTIL_LIBS "")
+list(APPEND UTIL_LIBS testbench)
+# list(APPEND UTIL_LIBS lablog)
+target_link_libraries(${module_name} PUBLIC ${UTIL_LIBS})
+
+# Tests
+add_library(test_${module_name} ${CMAKE_CURRENT_LIST_DIR}/tests/test_${module_name}.cpp)
+target_include_directories(test_${module_name} PRIVATE ${VERILATOR_ROOT}/include)
+target_include_directories(test_${module_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+target_link_libraries(test_${module_name} PUBLIC ${module_name} CppUTest CppUTestExt)
