@@ -1,3 +1,3 @@
-add_library(VTestbench INTERFACE)
-target_include_directories(VTestbench INTERFACE ${VERILATOR_ROOT}/include)
-target_include_directories(VTestbench INTERFACE ${CMAKE_SOURCE_DIR}/util)
+add_library(testbench INTERFACE)
+target_include_directories(testbench INTERFACE ${VERILATOR_ROOT}/include)
+target_include_directories(testbench INTERFACE ${CMAKE_CURRENT_LIST_DIR})

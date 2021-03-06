@@ -1,7 +1,10 @@
 #include "verilated.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
-IMPORT_TEST_GROUP(Counter);
+IMPORT_TEST_GROUP(CounterGroup);
+IMPORT_TEST_GROUP(BufferGroup);
+IMPORT_TEST_GROUP(SramArbiterGroup);
+IMPORT_TEST_GROUP(PwmGroup);
 
 int main(int argc, char** argv)
 {
