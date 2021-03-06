@@ -1,4 +1,4 @@
-#include "counter/counter.h"
+#include "counter.h"
 #include "CppUTest/TestHarness.h"
 
 #define TRACE_PATH_BASE "./traces/counter/"
@@ -7,7 +7,7 @@
 #define N_CYCLES        (64u)
 #define PERIOD          8
 
-TEST_GROUP(Counter)
+TEST_GROUP(CounterGroup)
 {
     Counter *tb;
 
@@ -23,7 +23,7 @@ TEST_GROUP(Counter)
     }
 };
 
-TEST(Counter, tc_check)
+TEST(CounterGroup, tc_check)
 {
     unsigned int counter_ctr = PERIOD;
     // Opening the file here lets us save file names with the test name.
@@ -47,7 +47,7 @@ TEST(Counter, tc_check)
         if (counter_ctr == 0) {
             counter_ctr = PERIOD;
             CHECK_EQUAL(1, tb->top->tc);
-            CHECK_EQUAL(PERIOD, tb->top->counter__DOT____Vtogcov__ctr);
+            CHECK_EQUAL(PERIOD, tb->top->counter__DOT__ctr);
         } else {
             counter_ctr--;
         }

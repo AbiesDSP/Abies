@@ -1,19 +1,15 @@
-# Add all tests
-function(add_test TEST_GROUP)
-    add_library(test_${TEST_GROUP} ${CMAKE_SOURCE_DIR}/tests/test_${TEST_GROUP}.cpp)
-    target_link_libraries(test_${TEST_GROUP} PRIVATE ${TEST_GROUP})
-    target_link_libraries(run_all_tests PRIVATE test_${TEST_GROUP})
-endfunction()
-
 # Main test runner.
 add_executable(run_all_tests ${CMAKE_SOURCE_DIR}/tests/run_all_tests.cpp)
 target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
 
-# Link test runners here.
-add_test(counter)
-add_test(buffer)
-add_test(sram_arbiter)
-add_test(pwm)
+# List of all test groups that the main test runner will run. Add or remove groups from this list.
+set(ALL_TEST_GROUPS "")
+list(APPEND ALL_TEST_GROUPS test_pwm)
+list(APPEND ALL_TEST_GROUPS test_sram_arbiter)
+list(APPEND ALL_TEST_GROUPS test_buffer)
+list(APPEND ALL_TEST_GROUPS test_counter)
 
+# Link it.
+target_link_libraries(run_all_tests PRIVATE ${ALL_TEST_GROUPS})
 # Link to CppUTest Libraries.
 target_link_libraries(run_all_tests PRIVATE CppUTest CppUTestExt)

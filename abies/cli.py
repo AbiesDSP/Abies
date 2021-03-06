@@ -1,9 +1,10 @@
 """ Command Line Interface """
 import argparse
-from genericpath import exists
 import sys
+
 from . import eda
-from . import new
+from . import create
+from . import sim
 
 def my_test(args):
     return
@@ -17,23 +18,28 @@ def main():
     sp_command = parser.add_subparsers(metavar="command",dest="command")
 
     # Generate new abies project
-    sp_new = sp_command.add_parser(
-        'new',
-        help="Generates a new Abies project"
+    sp_create = sp_command.add_parser(
+        'create',
+        help="Generates a new Abies project or module."
     )
-    new_group = sp_new.add_mutually_exclusive_group(required=True)
-    new_group.add_argument(
+    create_group = sp_create.add_mutually_exclusive_group(required=True)
+    create_group.add_argument(
         '--project',
         action='store',
-        help="Project name"
+        help="Create a new project."
     )
-    new_group.add_argument(
+    create_group.add_argument(
         '--module',
         action='store',
-        help="Module name."
+        help="Create a new framework module."
+    )
+    create_group.add_argument(
+        '--library',
+        action='store',
+        help="Create a new library module."
     )
  
-    sp_new.set_defaults(func=new.new)
+    sp_create.set_defaults(func=create.create)
 
     # Build a project for a physical device
     sp_build = sp_command.add_parser(
@@ -58,11 +64,18 @@ def main():
     )
     sp_build.set_defaults(func=eda.build)
 
-    sp_test = sp_command.add_parser(
-        'test',
-        help="Run tests."
+    sp_sim = sp_command.add_parser(
+        'sim',
+        help="Run the simulations."
     )
-    sp_test.set_defaults(func=my_test)
+    sp_sim.add_argument(
+        '--cmake',
+        action='store_true',
+        help="Run 'cmake ..' before running 'make'.",
+        default=False,
+        required=False
+    )
+    sp_sim.set_defaults(func=sim.sim)
 
     args = parser.parse_args()
     # try:

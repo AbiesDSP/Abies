@@ -1,6 +1,6 @@
 #pragma once
 
-#include "util/testbench.h"
+#include "testbench.h"
 #include "VCounter.h"
 #include <stdint.h>
 

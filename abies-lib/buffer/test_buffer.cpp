@@ -1,11 +1,11 @@
-#include "buffer/buffer.h"
+#include "buffer.h"
 #include "CppUTest/TestHarness.h"
 
 #define TRACE_PATH_BASE "./traces/buffer/"
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
-TEST_GROUP(Buffer)
+TEST_GROUP(BufferGroup)
 {
     Buffer *tb;
 
@@ -20,7 +20,7 @@ TEST_GROUP(Buffer)
     }
 };
 
-TEST(Buffer, basic)
+TEST(BufferGroup, basic)
 {
     std::string trace_string = TRACE_PATH_BASE;
     trace_string += "basic.vcd";

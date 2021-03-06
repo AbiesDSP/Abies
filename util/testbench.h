@@ -25,8 +25,7 @@ namespace Abies
             top = new Vmodule;
             Verilated::traceEverOn(true);   // Must always be called.
             // Start state is in reset
-            top->clk = 1;
-            top->rst = 1;
+            // top->clk = 1;
             eval();
         }
 
@@ -81,6 +80,11 @@ namespace Abies
                 trace->flush();
             }
             cycle_ctr++;
+        }
+        virtual void tick(unsigned int duration) {
+            for (unsigned int i = 0; i < duration; i++) {
+                tick();
+            }
         }
 
         // Hold in reset for N clock cycles.

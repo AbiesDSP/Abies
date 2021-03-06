@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.10)
 project(${project_name})
 
 # Locate verilator
@@ -32,7 +32,6 @@ endmacro()
 # Main test runner.
 add_executable(run_all_tests ${CMAKE_SOURCE_DIR}/run_all_tests.cpp)
 target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
-
 
 target_link_libraries(run_all_tests PRIVATE ${ALL_TEST_GROUPS})
 # Link to CppUTest Libraries.

@@ -1,11 +1,11 @@
-#include "pwm/pwm.h"
+#include "pwm.h"
 #include "CppUTest/TestHarness.h"
 
 #define TRACE_PATH_BASE "./traces/pwm/"
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
-TEST_GROUP(Pwm)
+TEST_GROUP(PwmGroup)
 {
     Pwm *tb;
 
@@ -20,7 +20,7 @@ TEST_GROUP(Pwm)
     }
 };
 
-TEST(Pwm, dc_check)
+TEST(PwmGroup, dc_check)
 {
     const unsigned int duty = 128;
 
