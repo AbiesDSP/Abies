@@ -17,6 +17,13 @@ else()
     return()
 endif()
 
+# find_package(OpenGL REQUIRED)
+# find_package(GLUT REQUIRED)
+# add_executable(dumbplot util/dumbplot.cpp)
+# # target_include_directories(dumbplot ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+# target_link_libraries(dumbplot PRIVATE ${OPENGL_gl_LIBRARY} ${GLUT_LIBRARIES})
+
+
 add_subdirectory(util)
 add_subdirectory(framework)
 add_subdirectory(abies-lib)
