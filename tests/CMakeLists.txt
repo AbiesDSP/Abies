@@ -9,6 +9,8 @@ list(APPEND ALL_TEST_GROUPS test_counter)
 list(APPEND ALL_TEST_GROUPS test_pwm)
 list(APPEND ALL_TEST_GROUPS test_sram_arbiter)
 list(APPEND ALL_TEST_GROUPS test_fir)
+list(APPEND ALL_TEST_GROUPS test_i2s_tx)
+list(APPEND ALL_TEST_GROUPS test_fifo)
 
 # Link it.
 target_link_libraries(run_all_tests PRIVATE ${ALL_TEST_GROUPS})

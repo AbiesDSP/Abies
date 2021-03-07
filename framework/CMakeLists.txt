@@ -1,3 +1,5 @@
 add_subdirectory(sram_arbiter)
 add_subdirectory(pwm)
 add_subdirectory(fir)
+add_subdirectory(i2s_tx)
+add_subdirectory(fifo)
