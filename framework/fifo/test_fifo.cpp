@@ -120,3 +120,30 @@ TEST(FifoGroup, almostflags)
     CHECK_EQUAL(1, tb->top->o_rempty);
     CHECK_EQUAL(0, tb->top->o_wfull);
 }
+
+TEST(FifoGroup, overflow)
+{
+    std::string trace_string = TRACE_PATH_BASE;
+    trace_string += "overflow.vcd";
+    tb->open_trace(trace_string.c_str());
+
+    tb->tick(10);
+
+    // Write two elements into 4-deep fifo
+    for (int i = 0; i < 5; i++) {
+        tb->top->i_wr = 1;
+        tb->top->i_wdata = i+42;
+        tb->tick();
+        tb->top->i_wr = 0;
+        tb->tick(3);
+    }
+    tb->top->i_wr = 0;
+    tb->tick(2);
+    for (int i = 0; i < 2; i++) {
+        tb->top->i_rd = 1;
+        tb->tick();
+        tb->top->i_rd = 0;
+        tb->tick(3);
+    }
+    tb->tick(2);
+}
