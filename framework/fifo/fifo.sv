@@ -116,7 +116,8 @@ always @(posedge clk)
 
 // Read port
 always @(posedge rclk)
-    if (i_rd)
+    // Fallthrough?
+    // if (i_rd)
         ram_data <= ram[rd_addr];
 
 // Write port controller
