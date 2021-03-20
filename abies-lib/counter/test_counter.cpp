@@ -20,6 +20,7 @@ TEST_GROUP(CounterGroup)
     void teardown()
     {
         delete tb;
+        tb = NULL;
     }
 };
 

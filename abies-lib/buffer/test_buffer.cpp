@@ -17,6 +17,7 @@ TEST_GROUP(BufferGroup)
     void teardown()
     {
         delete tb;
+        tb = NULL;
     }
 };
 
