@@ -28,7 +28,7 @@ Include the "--cmake" flag to configure cmake
 ## Contribute
 Create a new framework module from a template using this command
 
-    $ python -m abies create --module module_name
+    $ python3 -m abies create --module module_name
 
 Update the CMakeLists.txt files to add the new library and test groups.
 <!-- Create a new abies project (Not fully working)
