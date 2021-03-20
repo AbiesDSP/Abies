@@ -18,6 +18,7 @@ TEST_GROUP(SramArbiterGroup)
     void teardown()
     {
         delete tb;
+        tb = NULL;
     }
 };
 
@@ -38,9 +39,9 @@ TEST(SramArbiterGroup, read_init)
     
     // // Write to sram
     // for (int i = 0; i < 11; i++){
-    //     tb->top->addra = i;
-    //     tb->top->data_wr = i;
-    //     tb->tick();
+    //     tb.top->addra = i;
+    //     tb.top->data_wr = i;
+    //     tb.tick();
     // }
     // 1 cycle latency.
     tb->tick();

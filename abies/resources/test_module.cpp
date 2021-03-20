@@ -8,23 +8,22 @@
 
 TEST_GROUP(${module_class}Group)
 {
-    ${module_class} *tb;
-
     void setup()
     {
-        tb = new ${module_class};
+
     }
 
     void teardown()
     {
-        delete tb;
+
     }
 };
 
 TEST(${module_class}Group, basic)
 {
+    ${module_class} tb;
     std::string trace_string = TRACE_PATH_BASE;
     trace_string += "basic.vcd";
-    tb->open_trace(trace_string.c_str());
-    tb->reset(RESET_DURATION);
+    tb.open_trace(trace_string.c_str());
+    tb.reset(RESET_DURATION);
 }

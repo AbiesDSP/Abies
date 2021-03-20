@@ -9,7 +9,6 @@
 TEST_GROUP(FirGroup)
 {
     Fir *tb;
-
     void setup()
     {
         tb = new Fir;
@@ -18,6 +17,7 @@ TEST_GROUP(FirGroup)
     void teardown()
     {
         delete tb;
+        tb = NULL;
     }
 };
 
@@ -35,6 +35,7 @@ TEST(FirGroup, basic)
         tb->tick();
         tb->top->ce = 0;
         tb->tick(4);
+
     }
 }
 

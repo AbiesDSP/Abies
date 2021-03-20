@@ -8,7 +8,6 @@
 TEST_GROUP(PwmGroup)
 {
     Pwm *tb;
-
     void setup()
     {
         tb = new Pwm;
@@ -17,6 +16,7 @@ TEST_GROUP(PwmGroup)
     void teardown()
     {
         delete tb;
+        tb = NULL;
     }
 };
 
