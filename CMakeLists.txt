@@ -10,12 +10,12 @@ else()
 endif()
 
 # Locate CppUTest
-if (DEFINED ENV{CPPUTEST_HOME})
-    message(STATUS "Using CppUTest found in $ENV{CPPUTEST_HOME}")
-else()
-    message(FATAL_ERROR "CPPUTEST_HOME is not set. Set CPPUTEST_HOME in ~/.bashrc")
-    return()
-endif()
+# if (DEFINED ENV{CPPUTEST_HOME})
+#     message(STATUS "Using CppUTest found in $ENV{CPPUTEST_HOME}")
+# else()
+#     message(FATAL_ERROR "CPPUTEST_HOME is not set. Set CPPUTEST_HOME in ~/.bashrc")
+#     return()
+# endif()
 
 # find_package(OpenGL REQUIRED)
 # find_package(GLUT REQUIRED)

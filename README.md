@@ -9,7 +9,7 @@ Open Source, Real Time, Digital Audio Effects Framkework
 - Vivado (For synthesis/implementation)
 - Edalize
 
-    Make sure these are installed and their env variables are set.
+    Make sure these are installed and their env variables are set. You can install these from source or using apt-get.
 
     On Ubuntu/wsl, run "sudo apt install libtinfo5" if vivado crashes
 
@@ -23,12 +23,12 @@ Run Tests
 
 Include the "--cmake" flag to configure cmake 
 
-    $ python -m abies sim
+    $ python3 -m abies sim
 
 ## Contribute
 Create a new framework module from a template using this command
 
-    $ python -m abies create --module module_name
+    $ python3 -m abies create --module module_name
 
 Update the CMakeLists.txt files to add the new library and test groups.
 <!-- Create a new abies project (Not fully working)
