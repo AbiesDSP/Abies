@@ -17,7 +17,6 @@ TEST_GROUP(SramArbiterGroup)
 
     void teardown()
     {
-        tb->close_trace();
         delete tb;
         tb = NULL;
     }

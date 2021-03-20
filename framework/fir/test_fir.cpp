@@ -16,7 +16,6 @@ TEST_GROUP(FirGroup)
 
     void teardown()
     {
-        tb->close_trace();
         delete tb;
         tb = NULL;
     }
