@@ -67,19 +67,24 @@ namespace Abies
 
         virtual void tick(void)
         {
+            cycle_ctr++;
+            top->clk = 0;
+            eval();
+            if (trace) {
+                trace->dump((vluint64_t)(cycle_ctr * clock_period - (clock_period/10)));
+            }
+
             top->clk = 1;
             eval();
             if (trace) {
                 trace->dump((vluint64_t)(cycle_ctr * clock_period));
             }
-
             top->clk = 0;
             eval();
             if (trace) {
-                trace->dump((vluint64_t)(cycle_ctr * clock_period + clock_period / 2));
+                trace->dump((vluint64_t)(cycle_ctr * clock_period + (clock_period / 2)));
                 trace->flush();
             }
-            cycle_ctr++;
         }
         virtual void tick(unsigned int duration) {
             for (unsigned int i = 0; i < duration; i++) {
@@ -90,11 +95,11 @@ namespace Abies
         // Hold in reset for N clock cycles.
         virtual void reset(unsigned int duration)
         {
-            top->rst = 1;
-            for (unsigned int i = 0; i < duration; i++) {
-                tick();
-            }
-            top->rst = 0;
+            // top->rst = 1;
+            // for (unsigned int i = 0; i < duration; i++) {
+            //     tick();
+            // }
+            // top->rst = 0;
         }
 
         uint64_t cycles(void)
