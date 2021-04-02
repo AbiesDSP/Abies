@@ -6,14 +6,14 @@ module dds #(
     // Number of entries in the waveform table.
     parameter DEPTH = 1024,
     // Tuning word width.
-    parameter TW = 8,
+    parameter TW = 10,
     // Output width
     parameter OW = 24,
     // Phase accumulator width. Must satisfy equation: 2**PW >= DEPTH. Add an extra bit when using a half-wave table. Add an extra 2 bits when using quarter-wave.
-    parameter PW = 12,
+    parameter PW = 15,
     // Parameter, type of table being used. Options are: "FULL", "HALF", and "QUARTER"
     // The data in the waveform table must match this selection.
-    parameter TABLE_TYPE = "QUARTER",
+    parameter TABLE_TYPE = "HALF",
     // Choose between "HIGH_PERFORMANCE" or "LOW_LATENCY"
     parameter RAM_PERFORMANCE = "HIGH_PERFORMANCE"
 ) (
@@ -60,8 +60,8 @@ generate
         always @(posedge clk) begin
             wfm_rd_en <= phase_valid;
             valid <= ram_valid;
+            negate <= {negate[RAM_LAT-2:0], phase_acc[PW-1]};
             if (phase_valid) begin
-                negate <= {negate[RAM_LAT-2:0], phase_acc[PW-1]};
                 // Invert phase for negative section of the waveform.
                 wfm_raddr <= phase_acc[PW-1] ? ~phase_acc[PW-2:PW-AW-1] : phase_acc[PW-2:PW-AW-1];
             end
@@ -74,8 +74,8 @@ generate
         always @(posedge clk) begin
             wfm_rd_en <= phase_valid;
             valid <= ram_valid;
+            negate <= {negate[RAM_LAT-2:0], phase_acc[PW-1]};
             if (phase_valid) begin
-                negate <= {negate[RAM_LAT-2:0], phase_acc[PW-1]};
                 wfm_raddr <= phase_acc[PW-2] ? ~phase_acc[PW-3:PW-AW-2] : phase_acc[PW-3:PW-AW-2];
             end
             if (ram_valid) begin

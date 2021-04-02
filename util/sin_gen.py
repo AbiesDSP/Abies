@@ -25,11 +25,15 @@ if __name__ == '__main__':
     memory_file_path = "./mem/sin_w{0}_d{1}.mem".format(sys.argv[1], sys.argv[2])
     memory_file = open(memory_file_path, "w")
 
+    maxval = 2**(int(sys.argv[1])-1)-1
     for x in range(depth):
         # https://zipcpu.com/dsp/2017/08/26/quarterwave.html
         # To get a lower-distortion sin wave when using a half or quarter wave table,
         # add a half sample of phase to the table entries.
-        data_point = int(((width-1)/2)*np.sin((2*np.pi*(2*x + 1))/(2 * depth*div)))
+        ph = (2.0 * np.pi * x) / (depth * div)
+        # ph += np.pi / (depth * div)
+        data_point = int(maxval * np.sin(ph))
+        # data_point = int(((width-1)/2)*np.sin((2*np.pi*(2*x + 1))/(2 * depth*div)))
         hexval = tohex(data_point, int(sys.argv[1]))
         memory_file.write(f"{hexval} ")
 

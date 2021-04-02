@@ -29,7 +29,7 @@ TEST(DdsGroup, basic)
 
     unsigned int sample_div = 10; // sample clock.
 
-    tb->top->tuning_word = 1;
+    tb->top->tuning_word = 320;
 
     for (int i = 0; i < 8192; i++) {
         tb->top->ce = 1;
