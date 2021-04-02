@@ -13,7 +13,7 @@ module dds #(
     parameter PW = 15,
     // Parameter, type of table being used. Options are: "FULL", "HALF", and "QUARTER"
     // The data in the waveform table must match this selection.
-    parameter TABLE_TYPE = "HALF",
+    parameter TABLE_TYPE = "QUARTER",
     // Choose between "HIGH_PERFORMANCE" or "LOW_LATENCY"
     parameter RAM_PERFORMANCE = "HIGH_PERFORMANCE"
 ) (
