@@ -29,12 +29,12 @@ TEST(DdsGroup, basic)
 
     unsigned int sample_div = 10; // sample clock.
 
-    tb->top->tuning_word = 4;
+    tb->top->tuning_word = 1;
 
-    for (int i = 0; i < 2048; i++) {
+    for (int i = 0; i < 4096; i++) {
         tb->top->ce = 1;
         tb->tick();
-        tb->top->ce = 0;
-        tb->tick(sample_div-1);
+        // tb->top->ce = 0;
+        // tb->tick(sample_div-1);
     }
 }

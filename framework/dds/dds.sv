@@ -52,7 +52,7 @@ logic ram_valid = 1'b0;
 genvar negate_index;
 generate
     if (TABLE_TYPE == "FULL") begin: full_wave_table
-        // No need for any pipelining address modification when using full wave table.
+        // No need for any pipelining when using full wave table.
         assign wfm_raddr = phase_acc[PW-1:PW-AW];
         assign ampl = wfm_out;
         assign wfm_rd_en = phase_valid;
@@ -64,19 +64,11 @@ generate
             valid <= ram_valid;
             if (phase_valid) begin
                 negate <= {negate[RAM_LAT-2:0], phase_acc[PW-1]};
-                // Negative phase of wave.
-                if (phase_acc[PW-1]) begin
-                    wfm_raddr <= {AW{1'b1}} - phase_acc[PW-2:PW-AW-1];
-                // Positive phase.
-                end else begin
-                    wfm_raddr <= phase_acc[PW-2:PW-AW-1];
-                end
+                // Invert phase for negative section of the waveform.
+                wfm_raddr <= phase_acc[PW-1] ? ~phase_acc[PW-2:PW-AW-1] : phase_acc[PW-2:PW-AW-1];
             end
             if (ram_valid) begin
-                if (negate[RAM_LAT-1])
-                    ampl <= -wfm_out;
-                else
-                    ampl <= wfm_out;
+                ampl <= negate[RAM_LAT-1] ? -wfm_out : wfm_out;
             end
         end
     end else if (TABLE_TYPE == "QUARTER") begin: quarter_wave_table
@@ -89,10 +81,7 @@ generate
                 wfm_raddr <= phase_acc[PW-2] ? ~phase_acc[PW-3:PW-AW-2] : phase_acc[PW-3:PW-AW-2];
             end
             if (ram_valid) begin
-                if (negate[RAM_LAT-1])
-                    ampl <= -wfm_out;
-                else
-                    ampl <= wfm_out;
+                ampl <= negate[RAM_LAT-1] ? -wfm_out : wfm_out;
             end
         end
     end

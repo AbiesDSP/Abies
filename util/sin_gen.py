@@ -26,7 +26,10 @@ if __name__ == '__main__':
     memory_file = open(memory_file_path, "w")
 
     for x in range(depth):
-        data_point = int(((width-1)/2)*np.sin((2*np.pi*x)/(depth*div)))
+        # https://zipcpu.com/dsp/2017/08/26/quarterwave.html
+        # To get a lower-distortion sin wave when using a half or quarter wave table,
+        # add a half sample of phase to the table entries.
+        data_point = int(((width-1)/2)*np.sin((2*np.pi*(2*x + 1))/(2 * depth*div)))
         hexval = tohex(data_point, int(sys.argv[1]))
         memory_file.write(f"{hexval} ")
 
