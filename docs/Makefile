@@ -8,8 +8,8 @@ SOURCEDIR     = .
 BUILDDIR      = _build
 
 github:
-	rm -rf html
-	mkdir html
+	rm -rf html _static
+	mkdir html _static
 	@make html
 	@cp -a _build/html/. ../docs/html
 # Put it first so that "make" without argument is like "make help".
