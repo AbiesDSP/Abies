@@ -31,9 +31,9 @@ module dds #(
 );
 // Table address width
 localparam AW = $clog2(DEPTH);
-localparam PAD = PW-TW;
+// Overall read latency from valid phase to valid output.
 localparam RAM_LAT = (RAM_PERFORMANCE == "LOW_LATENCY") ? 2 : 3;
-// ---------- Memories ----------
+// ---------- Waveform Table ----------
 // Table stored in BRAM. Using vivado language template to infer.
 reg [OW-1:0] wfm_table [0:DEPTH-1];
 reg [OW-1:0] wfm_data = {OW{1'b0}};
@@ -44,11 +44,9 @@ reg wfm_rd_en = 1'b0;
 logic [AW-1:0] wfm_raddr;
 reg [PW-1:0] phase_acc = {PW{1'b0}};
 logic phase_valid = 1'b0;
-logic addr_valid = 1'b0;
 logic ram_valid = 1'b0;
 
 // Assign read address based on wavetable format.
-// Should this be pipelined? It will cost one cycle of latency.
 genvar negate_index;
 generate
     if (TABLE_TYPE == "FULL") begin: full_wave_table
@@ -85,7 +83,6 @@ generate
             end
         end
     end
-
 endgenerate
 
 // ---------- Initialization ----------
@@ -104,10 +101,7 @@ generate
     /* verilator lint_on WIDTH */
 endgenerate
 
-always @(posedge clk) begin
-    phase_valid <= ce;
-end
-// Handle ce/valid signals based on ram performance.
+// Optional BRAM output register.
 generate
     if (RAM_PERFORMANCE == "LOW_LATENCY") begin
         assign wfm_out = wfm_data;
@@ -133,7 +127,7 @@ generate
         end
     end
 endgenerate
-// ---------- Waveform Table ----------
+// ---------- Waveform Table BRAM Interface ----------
 // Waveform tables can be updated at run-time.
 always @(posedge clk) begin
     if (wfm_wea)
@@ -144,6 +138,7 @@ end
 
 // Phase accumulator
 always @(posedge clk) begin
+    phase_valid <= ce;
     if (rst)
         phase_acc <= start_phase;
     else if (ce)

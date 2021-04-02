@@ -31,10 +31,10 @@ TEST(DdsGroup, basic)
 
     tb->top->tuning_word = 1;
 
-    for (int i = 0; i < 4096; i++) {
+    for (int i = 0; i < 8192; i++) {
         tb->top->ce = 1;
         tb->tick();
-        // tb->top->ce = 0;
-        // tb->tick(sample_div-1);
+        tb->top->ce = 0;
+        tb->tick(sample_div-1);
     }
 }
