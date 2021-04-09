@@ -1,12 +1,13 @@
 `default_nettype none
-
-// `include "audio_b.sv"
+`include "audio_bus.sv"
 
 module dfb (
-    input logic clk,
-    audio_b.din din,
-    audio_b.dout dout
+    audio_bus.din din,
+    audio_bus.dout dout
 );
+
+logic clk;
+assign clk = din.clk;
 
 assign din.ready = 1;
 

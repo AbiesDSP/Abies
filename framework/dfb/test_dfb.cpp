@@ -1,4 +1,5 @@
-#include "dfb.h"
+#include "VDfb.h"
+#include "testbench.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
@@ -6,12 +7,14 @@
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
+using Abies::Testbench;
+
 TEST_GROUP(DfbGroup)
 {
-    Dfb *tb;
+    Testbench<VDfb> *tb;
     void setup()
     {
-        tb = new Dfb;
+        tb = new Testbench<VDfb>;
     }
 
     void teardown()
