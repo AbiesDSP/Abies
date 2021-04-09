@@ -25,5 +25,6 @@ TEST(${module_class}Group, basic)
     std::string trace_string = TRACE_PATH_BASE;
     trace_string += "basic.vcd";
     tb.open_trace(trace_string.c_str());
-    tb.reset(RESET_DURATION);
+
+    tb->tick(100);s
 }

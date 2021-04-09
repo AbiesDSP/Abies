@@ -118,8 +118,8 @@ def create_module(args, template_filter):
     with pkg_resources.open_text(resources, "cmake_module.txt") as file:
        apply_template(file, 'CMakeLists.txt', base_project, template_filter)
     # Generate source files.
-    with pkg_resources.open_text(resources, "module.v") as file:
-        apply_template(file, args.module + '.v', base_project, template_filter)
+    with pkg_resources.open_text(resources, "module.sv") as file:
+        apply_template(file, args.module + '.sv', base_project, template_filter)
     with pkg_resources.open_text(resources, "module.h") as file:
        apply_template(file, args.module + '.h', base_project, template_filter)
     with pkg_resources.open_text(resources, "module.cpp") as file:

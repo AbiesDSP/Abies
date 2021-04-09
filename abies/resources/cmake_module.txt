@@ -9,9 +9,9 @@ add_custom_command(TARGET ${module_name}
     COMMENT "Creating trace directory: ${CMAKE_BINARY_DIR}/traces/${module_name}")
 
 set(V_SRCS "")
-list(APPEND V_SRCS "${CMAKE_CURRENT_LIST_DIR}/${module_name}.v")
+list(APPEND V_SRCS "${CMAKE_CURRENT_LIST_DIR}/${module_name}.sv")
 
-message(STATUS "Verilating ${module_name} using ${module_name}.v as top")
+message(STATUS "Verilating ${module_name} using ${module_name}.sv as top")
 
 verilate(${module_name} TRACE
     INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}
@@ -24,10 +24,8 @@ verilate(${module_name} TRACE
 target_include_directories(${module_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(${module_name} PUBLIC ${CMAKE_BINARY_DIR}/verilated)
 
-# Link to util libraries by default.
-set(UTIL_LIBS "")
-list(APPEND UTIL_LIBS testbench)
-target_link_libraries(${module_name} PUBLIC ${UTIL_LIBS})
+# Link to util libraries.
+target_link_libraries(${module_name} PUBLIC testbench)
 
 # Tests
 add_library(test_${module_name} ${CMAKE_CURRENT_LIST_DIR}/test_${module_name}.cpp)

@@ -7,6 +7,7 @@ IMPORT_TEST_GROUP(FirGroup);
 IMPORT_TEST_GROUP(I2STxGroup);
 IMPORT_TEST_GROUP(FifoGroup);
 IMPORT_TEST_GROUP(DdsGroup);
+IMPORT_TEST_GROUP(DfbGroup);
 
 int main(int argc, char** argv)
 {

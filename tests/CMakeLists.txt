@@ -10,6 +10,7 @@ list(APPEND ALL_TEST_GROUPS test_fir)
 list(APPEND ALL_TEST_GROUPS test_i2s_tx)
 list(APPEND ALL_TEST_GROUPS test_fifo)
 list(APPEND ALL_TEST_GROUPS test_dds)
+target_link_libraries(run_all_tests PRIVATE test_dfb)
 
 # Link it.
 target_link_libraries(run_all_tests PRIVATE ${ALL_TEST_GROUPS})
