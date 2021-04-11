@@ -5,6 +5,7 @@ target_link_libraries(test_dfb PRIVATE CppUTest CppUTestExt)
 
 # Link Utility Libraries
 target_link_libraries(test_dfb PRIVATE testbench)
+target_link_libraries(test_dfb PRIVATE sram)
 
 # Verilog sources
 set(V_SRCS "")

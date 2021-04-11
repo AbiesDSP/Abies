@@ -1,8 +1,10 @@
 #pragma once
 
+#include "cosim.h"
 #include "verilated_vcd_c.h"
+#include <list>
 #include <iostream>
-#include <cstdint>
+#include <stdint.h>
 
 #define DEFAULT_CLOCK_PERIOD    (10)
 
@@ -18,14 +20,14 @@ namespace Abies
         unsigned int    clock_period = DEFAULT_CLOCK_PERIOD;
         // Total elapsed clock cycles.
         uint64_t        cycle_ctr;
+        // External co-simulations driven by this testbench.
+        std::list<CoSim*> m_extsims;
 
         // Module can be initialized with a specific clock period, otherwise 100MHz will be used.
         Testbench(unsigned int clock_period = DEFAULT_CLOCK_PERIOD) : trace(NULL), cycle_ctr(0), clock_period(clock_period)
         {
             top = new Vmodule;
             Verilated::traceEverOn(true);   // Must always be called.
-            // Start state is in reset
-            // top->clk = 1;
             eval();
         }
 
@@ -60,8 +62,25 @@ namespace Abies
             }
         }
 
+        void cosim_attach(CoSim *extsim)
+        {
+            if (extsim) {
+                m_extsims.push_back(extsim);
+            }
+        }
+        void cosim_detach(CoSim *extsim)
+        {
+            m_extsims.erase(std::remove(m_extsims.begin(), m_extsims.end(), extsim));
+        }
+
         virtual void eval(void)
         {
+            // Evaluate co-simulations.
+            for (auto sim : m_extsims) {
+                sim->eval();
+                sim->update_slist();
+            }
+            // Evaluate HDL
             top->eval();
         }
 

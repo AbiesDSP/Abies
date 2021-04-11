@@ -19,6 +19,7 @@ endif()
 # endif()
 
 add_subdirectory(util)
+add_subdirectory(models)
 add_subdirectory(framework)
-add_subdirectory(abies-lib)
+# add_subdirectory(abies-lib)
 add_subdirectory(tests)

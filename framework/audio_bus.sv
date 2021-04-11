@@ -19,4 +19,22 @@ interface audio_bus #(parameter DW = 24) (input logic clk);
     );
 endinterface
 
+interface i2s_bus #(parameter DW = 24) (input logic clk, input logic rst);
+
+    logic sclk;
+    logic lrclk;
+    logic sdi;
+    logic sdo;
+
+    modport i2sm (
+        input sdi,
+        output sclk, lrclk, sdo
+    );
+    
+    modport i2ss (
+        input sclk, lrclk, sdo,
+        output output_ports
+    );
+
+endinterface
 `endif

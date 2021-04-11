@@ -1,5 +1,6 @@
 #include "VDfb.h"
 #include "testbench.h"
+#include "sram.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
@@ -8,10 +9,12 @@
 #define RESET_DURATION  10
 
 using Abies::Testbench;
+using Abies::Sram;
 
 TEST_GROUP(DfbGroup)
 {
     Testbench<VDfb> *tb;
+    
     void setup()
     {
         tb = new Testbench<VDfb>;
@@ -23,7 +26,7 @@ TEST_GROUP(DfbGroup)
     }
 };
 
-TEST(DfbGroup, basic)
+IGNORE_TEST(DfbGroup, basic)
 {
     std::string trace_string = TRACE_PATH_BASE;
     trace_string += "basic.vcd";
@@ -39,4 +42,15 @@ TEST(DfbGroup, basic)
         tb->tick();
     }
     tb->tick(100);
+}
+TEST(DfbGroup, cosimstuff)
+{
+    std::string trace_string = TRACE_PATH_BASE;
+    trace_string += "cosim.vcd";
+    uint8_t ce_n, oe_n, we_n;
+    uint32_t addr;
+    uint8_t dq;
+
+    tb->open_trace(trace_string.c_str());
+    tb->tick(10);
 }
