@@ -19,21 +19,41 @@ interface audio_bus #(parameter DW = 24) (input logic clk);
     );
 endinterface
 
-interface i2s_bus #(parameter DW = 24) (input logic clk, input logic rst);
+interface i2s_b #(parameter DW = 24) (input logic mclk);
 
     logic sclk;
     logic lrclk;
     logic sdi;
     logic sdo;
 
-    modport i2sm (
-        input sdi,
+    // DAC Driver
+    modport m_tx (
+        input mclk,
         output sclk, lrclk, sdo
     );
-    
-    modport i2ss (
-        input sclk, lrclk, sdo,
-        output output_ports
+    // ADC Driver
+    modport m_rx (
+        input mclk, sdi,
+        output sclk, lrclk
+    );
+    // Bidirectional Driver
+    modport m_bi (
+        input mclk, sdi,
+        output sclk, lrclk, sdo
+    );
+    // DAC receiver (DAC IC)
+    modport s_rx (
+        input mclk, sclk, lrclk, sdo
+    );
+    // ADC transmitter (ADC IC)
+    modport s_tx (
+        input mclk, sclk, lrclk,
+        output sdi
+    );
+    // Bidirectional
+    modport s_bi (
+        input mclk, sclk, lrclk, sdo,
+        output sdi
     );
 
 endinterface

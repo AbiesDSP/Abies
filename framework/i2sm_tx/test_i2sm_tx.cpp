@@ -1,21 +1,21 @@
-#include "VI2STx.h"
+#include "VI2SMTx.h"
 #include "testbench.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
-#define TRACE_PATH_BASE "./traces/i2s_tx/"
+#define TRACE_PATH_BASE "./traces/i2sm_tx/"
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
 using Abies::Testbench;
 
-TEST_GROUP(I2STxGroup)
+TEST_GROUP(I2SMTxGroup)
 {
-    Testbench<VI2STx> *tb;
+    Testbench<VI2SMTx> *tb;
 
     void setup()
     {
-        tb = new Testbench<VI2STx>;
+        tb = new Testbench<VI2SMTx>;
     }
 
     void teardown()
@@ -24,7 +24,7 @@ TEST_GROUP(I2STxGroup)
     }
 };
 
-TEST(I2STxGroup, basic)
+TEST(I2SMTxGroup, basic)
 {
     std::string trace_string = TRACE_PATH_BASE;
     trace_string += "basic.vcd";
