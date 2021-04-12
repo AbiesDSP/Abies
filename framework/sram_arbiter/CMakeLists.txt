@@ -9,11 +9,11 @@ target_link_libraries(test_sram_arbiter PUBLIC sram)
 
 message(STATUS "Verilating sram_arbiter using sram_arbiter.v as top")
 set(V_SRCS "")
-list(APPEND V_SRCS "${CMAKE_CURRENT_LIST_DIR}/sram_arbiter.sv")
+list(APPEND V_SRCS "sram_arbiter.sv")
 
 verilate(test_sram_arbiter TRACE
     TOP_MODULE sram_arbiter
-    # INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/framework
+    # INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/framework
     SOURCES ${V_SRCS}
     DIRECTORY ${CMAKE_BINARY_DIR}/verilated
     PREFIX VSramArbiter

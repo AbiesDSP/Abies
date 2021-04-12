@@ -9,8 +9,8 @@ target_link_libraries(test_dfb PRIVATE sram)
 
 # Verilog sources
 set(V_SRCS "")
-list(APPEND V_SRCS "${CMAKE_CURRENT_LIST_DIR}/dfb.sv")
-list(APPEND V_SRCS "${CMAKE_CURRENT_LIST_DIR}/dfb_tb.sv")
+list(APPEND V_SRCS "dfb.sv")
+list(APPEND V_SRCS "dfb_tb.sv")
 message(STATUS "Verilating dfb using dfb_tb.sv as top")
 
 verilate(test_dfb TRACE

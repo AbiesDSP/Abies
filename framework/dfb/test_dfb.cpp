@@ -26,7 +26,7 @@ TEST_GROUP(DfbGroup)
     }
 };
 
-IGNORE_TEST(DfbGroup, basic)
+TEST(DfbGroup, basic)
 {
     std::string trace_string = TRACE_PATH_BASE;
     trace_string += "basic.vcd";

@@ -1,15 +1,15 @@
 `default_nettype none
 
-module pwm(
-    input wire clk,
-    input wire rst,
-    input wire [width-1:0] duty,
-    output reg q
+module pwm #(
+    parameter DW = 8
+) (
+    input logic clk,
+    input logic rst,
+    input logic [DW-1:0] duty,
+    output logic q
 );
 
-parameter width = 8;
-
-reg [width-1:0] counter;
+reg [DW-1:0] counter;
 
 always @(posedge clk) begin
     if (rst) begin

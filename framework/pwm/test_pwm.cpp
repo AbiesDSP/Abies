@@ -1,16 +1,19 @@
-#include "pwm.h"
+#include "VPwm.h"
+#include "testbench.h"
 #include "CppUTest/TestHarness.h"
 
 #define TRACE_PATH_BASE "./traces/pwm/"
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
+using Abies::Testbench;
+
 TEST_GROUP(PwmGroup)
 {
-    Pwm *tb;
+    Testbench<VPwm> *tb;
     void setup()
     {
-        tb = new Pwm;
+        tb = new Testbench<VPwm>;
     }
 
     void teardown()

@@ -1,47 +1,47 @@
 // Fir using a single multiply and bram for sample/coef storage.
 `default_nettype none
 
-module fir(
-    input wire clk,
-    input wire rst,
-    input wire ce,
-    output reg busy,
-    output reg valid,
-    input wire [DW-1:0] samp_i,
-    output wire [DW-1:0] scaled_o,
-    output wire [OW-1:0] samp_o
+module fir #(
+    parameter N_TAPS = 21,
+    parameter IDW = $clog2(21), // $clog2(N_TAPS)
+    localparam MAX_ADDR = N_TAPS - 1,
+    parameter TW = 16,
+    parameter DW = 16,
+    localparam PW = TW + DW,
+    localparam OW = TW + DW + IDW,
+    parameter COEF_FILE = ""
+) (
+    input logic clk,
+    input logic rst,
+    input logic ce,
+    output logic busy,
+    output logic valid,
+    input logic [DW-1:0] samp_i,
+    output logic [DW-1:0] scaled_o,
+    output logic [OW-1:0] samp_o
 );
 
-parameter N_TAPS = 21;
-parameter IDW = 5; // $clog2(N_TAPS)
-localparam MAX_ADDR = N_TAPS - 1;
-parameter TW = 16;
-parameter DW = 16;
-localparam PW = TW + DW;
-localparam OW = TW + DW + IDW;
-parameter COEF_FILE = "";
-
 // Coefficient memory
-reg [TW-1:0] coef_ram [0:N_TAPS-1];
-reg [IDW-1:0] coef_rd_addr;
-reg signed [TW-1:0] tap;
+logic [TW-1:0] coef_ram [0:N_TAPS-1];
+logic [IDW-1:0] coef_rd_addr;
+logic signed [TW-1:0] tap;
 
 // Sample memory
-reg [DW-1:0] samp_ram [0:N_TAPS-1];
-reg [IDW-1:0] samp_rd_addr, samp_wr_addr;
-reg signed [DW-1:0] samp;
+logic [DW-1:0] samp_ram [0:N_TAPS-1];
+logic [IDW-1:0] samp_rd_addr, samp_wr_addr;
+logic signed [DW-1:0] samp;
 
-reg bram_read_en;
-wire last_addr;
+logic bram_read_en;
+logic last_addr;
 
 // Control signals
-reg [IDW-1:0] count;
-reg count_en;
-reg signed [PW-1:0] product;
-reg signed [OW-1:0] accum;
-reg signed [OW-1:0] accum_out; // Shift?
-reg accum_en;
-wire accum_rst;
+logic [IDW-1:0] count;
+logic count_en;
+logic signed [PW-1:0] product;
+logic signed [OW-1:0] accum;
+logic signed [OW-1:0] accum_out; // Shift?
+logic accum_en;
+logic accum_rst;
 
 // Populate coefficients from memory file.
 generate
@@ -70,10 +70,10 @@ assign scaled_o = accum_out[OW-1:TW+IDW];
 assign samp_o = accum_out;
 
 // Accumuklator valid signal pipeline
-reg [2:0] av;
-wire last_tap;
+logic [2:0] av;
+logic last_tap;
 
-reg [2:0] in_pipe;
+logic [2:0] in_pipe;
 assign last_tap = coef_rd_addr == MAX_ADDR;
 
 assign accum_rst = in_pipe[2];

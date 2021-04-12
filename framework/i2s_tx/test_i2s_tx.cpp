@@ -1,4 +1,5 @@
-#include "i2s_tx.h"
+#include "VI2STx.h"
+#include "testbench.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
@@ -6,13 +7,15 @@
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
+using Abies::Testbench;
+
 TEST_GROUP(I2STxGroup)
 {
-    I2STx *tb;
+    Testbench<VI2STx> *tb;
 
     void setup()
     {
-        tb = new I2STx;
+        tb = new Testbench<VI2STx>;
     }
 
     void teardown()

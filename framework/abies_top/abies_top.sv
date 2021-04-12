@@ -1,24 +1,24 @@
 `default_nettype none
 
 module abies_top (
-    input wire clk,
-    input wire rst,
-    output wire [1:0] led,
-    output wire [2:0] rgb,
-    output wire [18:0] sram_addr,
-    inout wire [7:0] sram_dq,
-    output wire sram_ce_n,
-    output wire sram_oe_n,
-    output wire sram_we_n
+    input logic clk,
+    input logic rst,
+    output logic [1:0] led,
+    output logic [2:0] rgb,
+    output logic [18:0] sram_addr,
+    inout logic [7:0] sram_dq,
+    output logic sram_ce_n,
+    output logic sram_oe_n,
+    output logic sram_we_n
 );
 
-reg [5:0] counter;
-reg wea;
-reg [19:0] addra;
-reg [7:0] data_wr;
-wire [7:0] data_rd;
+logic [5:0] counter;
+logic wea;
+logic [19:0] addra;
+logic [7:0] data_wr;
+logic [7:0] data_rd;
 
-wire [7:0] sram_dat_wr;
+logic [7:0] sram_dat_wr;
 assign sram_dq = !sram_we_n ? sram_dat_wr : 8'bZ;
 
 // Turn unused leds off.

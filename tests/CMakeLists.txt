@@ -2,17 +2,11 @@
 add_executable(run_all_tests ${CMAKE_SOURCE_DIR}/tests/run_all_tests.cpp)
 target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
 
-# List of all test groups that the main test runner will run. Add or remove groups from this list.
-set(ALL_TEST_GROUPS "")
-# list(APPEND ALL_TEST_GROUPS test_pwm)
-list(APPEND ALL_TEST_GROUPS test_sram_arbiter)
-# list(APPEND ALL_TEST_GROUPS test_fir)
-# list(APPEND ALL_TEST_GROUPS test_i2s_tx)
-# list(APPEND ALL_TEST_GROUPS test_fifo)
-# list(APPEND ALL_TEST_GROUPS test_dds)
+# Link all test groups
+target_link_libraries(run_all_tests PRIVATE test_sram_arbiter)
+target_link_libraries(run_all_tests PRIVATE test_pwm)
+target_link_libraries(run_all_tests PRIVATE test_dds)
+target_link_libraries(run_all_tests PRIVATE test_fir)
+target_link_libraries(run_all_tests PRIVATE test_i2s_tx)
+target_link_libraries(run_all_tests PRIVATE test_fifo)
 target_link_libraries(run_all_tests PRIVATE test_dfb)
-
-# Link it.
-target_link_libraries(run_all_tests PRIVATE ${ALL_TEST_GROUPS})
-# Link to CppUTest Libraries.
-target_link_libraries(run_all_tests PRIVATE CppUTest CppUTestExt)
