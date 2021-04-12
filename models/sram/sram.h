@@ -33,6 +33,7 @@ public:
     void init(uint8_t val) {
         std::fill(ram_data.begin(), ram_data.end(), val);
     }
+    void init(const char *mem_file);
     size_t size(void) {
         return ram_data.size();
     }

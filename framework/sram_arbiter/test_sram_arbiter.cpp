@@ -13,17 +13,6 @@
 using Abies::Testbench;
 using Abies::Sram;
 
-static void init_sin(Sram *sr)
-{
-    double step;
-
-    step = (2.0 * M_PI) / sr->size();
-    for (size_t i = 0; i < sr->size(); i++) {
-        double entry = 255.0 * ((sin(i*step) + 1.0)/2.0);
-        sr->ram_data[i] = entry;
-    }
-}
-
 TEST_GROUP(SramArbiterGroup)
 {
     Testbench<VSramArbiter> *tb;
@@ -57,24 +46,21 @@ TEST_GROUP(SramArbiterGroup)
 
 TEST(SramArbiterGroup, read_init)
 {
-    // const unsigned int duration = 524288;
     const unsigned int duration = 524288;
-    const unsigned int skip = 1;
+    const unsigned int skip = 32;
     std::string trace_string = TRACE_PATH_BASE;
     trace_string += "read_init.vcd";
     tb->open_trace(trace_string.c_str());
 
-    init_sin(extsram);
+    extsram->init("../mem/sin_w8_d19.coe");
 
     tb->reset(RESET_DURATION);
-
-    tb->tick(2);
+    tb->tick();
 
     tb->top->en = 1;
     tb->top->ena = 1;
     tb->top->wea = 0;
     
-    // 1 cycle latency.
     tb->tick();
     for (int i = 0; i < duration; i+=skip) {
         tb->top->addra = i;

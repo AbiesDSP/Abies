@@ -1,6 +1,30 @@
 #include "sram.h"
+#include <fstream>
+// #include <string>
 
 namespace Abies {
+
+// Initialize memory using a typical memory file used with verilog readmemh.
+void Sram::init(const char *mem_file) {
+
+    std::ifstream ifile(mem_file);
+    
+    if (!ifile) {
+        std::cout << "Could not open memory file." << std::endl;
+        return;
+    }
+
+    int tmp;
+    size_t rd_addr = 0;
+    while (!ifile.eof()) {
+        if (rd_addr >= ram_size_) {
+            break;
+        }
+        // Read in space separated hex file.
+        ifile >> std::hex >> tmp;
+        ram_data[rd_addr++] = tmp;
+    }
+}
 
 void Sram::eval(void) {
     uint32_t addr_mod = 0;
