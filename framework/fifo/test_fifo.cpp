@@ -1,4 +1,5 @@
-#include "fifo.h"
+#include "VFifo.h"
+#include "testbench.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
@@ -6,13 +7,15 @@
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
+using Abies::Testbench;
+
 TEST_GROUP(FifoGroup)
 {
-    Fifo *tb;
+    Testbench<VFifo> *tb;
 
     void setup()
     {
-        tb = new Fifo;
+        tb = new Testbench<VFifo>;
     }
 
     void teardown()

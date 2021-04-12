@@ -1,4 +1,5 @@
-#include "fir.h"
+#include "VFir.h"
+#include "testbench.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
@@ -6,12 +7,14 @@
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
+using Abies::Testbench;
+
 TEST_GROUP(FirGroup)
 {
-    Fir *tb;
+    Testbench<VFir> *tb;
     void setup()
     {
-        tb = new Fir;
+        tb = new Testbench<VFir>;
     }
 
     void teardown()
