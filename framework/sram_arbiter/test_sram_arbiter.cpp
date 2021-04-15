@@ -20,7 +20,12 @@ TEST_GROUP(SramArbiterGroup)
 
     void setup()
     {
-        tb = new Testbench<VSramArbiter>;
+        // Create a new trace using the test name.
+        std::string test_name(UtestShell::getCurrent()->getName().asCharString());
+        std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
+
+        tb = new Testbench<VSramArbiter>(trace_path);
+
         extsram = new Sram(
             8,
             19,
@@ -48,13 +53,12 @@ TEST(SramArbiterGroup, read_init)
 {
     const unsigned int duration = 524288;
     const unsigned int skip = 32;
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "read_init.vcd";
-    tb->open_trace(trace_string.c_str());
 
     extsram->init("../mem/sin_w8_d19.coe");
 
-    tb->reset(RESET_DURATION);
+    tb->top->rst = 1;
+    tb->tick(RESET_DURATION);
+    tb->top->rst = 0;
     tb->tick();
 
     tb->top->en = 1;

@@ -1,0 +1,28 @@
+# Tests
+add_library(test_i2sm_tx test_i2sm_tx.cpp)
+target_include_directories(test_i2sm_tx PRIVATE ${VERILATOR_ROOT}/include)
+target_link_libraries(test_i2sm_tx PRIVATE CppUTest CppUTestExt)
+
+# Utility Libraries
+target_link_libraries(test_i2sm_tx PUBLIC testbench)
+
+set(V_SRCS "")
+list(APPEND V_SRCS "i2sm_tx.sv")
+list(APPEND V_SRCS "i2sm_tx_tb.sv")
+
+message(STATUS "Verilating i2sm_tx using i2sm_tx.sv as top")
+
+verilate(test_i2sm_tx TRACE
+    TOP_MODULE i2sm_tx_tb
+    INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/framework
+    SOURCES ${V_SRCS}
+    DIRECTORY ${CMAKE_BINARY_DIR}/verilated
+    PREFIX VI2SMTx
+    VERILATOR_ARGS ""
+)
+
+# Create trace directories when libraries are built
+add_custom_command(TARGET test_i2sm_tx
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/traces/i2sm_tx
+    COMMENT "Creating trace directory: ${CMAKE_BINARY_DIR}/traces/i2sm_tx")

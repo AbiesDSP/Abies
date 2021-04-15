@@ -24,7 +24,7 @@ def sim(args):
         return
 
     try:
-        subprocess.run(['./tests/run_all_tests'], check=True)
+        subprocess.run(['./framework/run_all_tests'], check=True)
     except subprocess.CalledProcessError as e:
         print("Ignore the previous error.")
     # Go back to original working directory.

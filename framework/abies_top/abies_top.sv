@@ -14,7 +14,7 @@ module abies_top (
 
 logic [5:0] counter;
 logic wea;
-logic [19:0] addra;
+logic [18:0] addra;
 logic [7:0] data_wr;
 logic [7:0] data_rd;
 
@@ -28,9 +28,9 @@ assign rgb[1] = 1;
 assign rgb[2] = 1;
 
 sram_arbiter #(
-    .aw(19),
-    .dw(8),
-    .latency(1)
+    .AW(19),
+    .DW(8),
+    .RD_LAT(1)
 ) sram_arbiter (
     .clk(clk),
     .rst(rst),
@@ -39,19 +39,19 @@ sram_arbiter #(
     .data_wr(data_wr),
     .data_rd(data_rd),
     .ena(1),
-    // .busya(busya),
+    .busya(),
     .wea(wea),
-    // .valida(valida),
+    .valida(),
     .sram_addr(sram_addr),
     .sram_ce_n(sram_ce_n),
     .sram_oe_n(sram_oe_n),
     .sram_we_n(sram_we_n),
-    .sram_dat_wr(sram_dat_wr),
-    .sram_dat_rd(sram_dq)
+    .sram_dq_wr(sram_dat_wr),
+    .sram_dq_rd(sram_dq)
 );
 
 pwm #(
-    .width(8)
+    .DW(8)
 ) pwm_0 (
     .clk(clk),
     .rst(rst),
@@ -65,7 +65,7 @@ always @(posedge clk) begin
         data_wr <= 0;
         addra <= 0;
         wea <= 1;
-        counter <= 8'h7f;
+        counter <= '1;
     end else begin
         counter <= counter - 1;
         if (counter == 0) begin

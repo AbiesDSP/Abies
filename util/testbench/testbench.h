@@ -1,34 +1,60 @@
 #pragma once
 
-#include "cosim.h"
+#include "co_sim.h"
+#include "clk_gen.h"
 #include "verilated_vcd_c.h"
 #include <list>
 #include <iostream>
+#include <string.h>
 #include <stdint.h>
 
 #define DEFAULT_CLOCK_PERIOD    (10)
 
 namespace Abies
 {
-    template <class Vmodule> class Testbench 
+    template <class Vmodule>
+    class Testbench 
     {
     public:
         // Module under test.
         Vmodule         *top;
         // Tests can generate a trace.
         VerilatedVcdC   *trace;
-        unsigned int    clock_period = DEFAULT_CLOCK_PERIOD;
+        unsigned int    clock_period;
         // Total elapsed clock cycles.
         uint64_t        cycle_ctr;
         // External co-simulations driven by this testbench.
-        std::list<CoSim*> m_extsims;
+        std::list<CoSim*> ext_sims;
+        ClkGen *clk_;
 
         // Module can be initialized with a specific clock period, otherwise 100MHz will be used.
-        Testbench(unsigned int clock_period = DEFAULT_CLOCK_PERIOD) : trace(NULL), cycle_ctr(0), clock_period(clock_period)
+        Testbench(std::string trace_path, unsigned int clock_period = DEFAULT_CLOCK_PERIOD) : trace(NULL), cycle_ctr(0), clock_period(clock_period), clk_(NULL)
         {
             top = new Vmodule;
+            clk_ = new ClkGen(clock_period);
+
             Verilated::traceEverOn(true);   // Must always be called.
+            if (!trace_path.empty()) {
+                open_trace(trace_path);
+            }
+            clk_->connect(&top->clk);
             eval();
+            dump(clk_->current());
+            clk_->next_edge(2);
+        }
+
+        Testbench(std::string trace_path, ClkGen *clk) : trace(NULL), cycle_ctr(0), clk_(clk)
+        {
+            top = new Vmodule;
+            clock_period = clk->period();
+
+            Verilated::traceEverOn(true);
+            if(!trace_path.empty()) {
+                open_trace(trace_path);
+            }
+            eval();
+            dump(clk_->current());
+            clk->next_edge(2);
         }
 
         virtual ~Testbench(void)
@@ -40,7 +66,7 @@ namespace Abies
         }
 
         // Open a new trace with the given filename.
-        virtual void open_trace(const char *filename)
+        void open_trace(std::string trace_path)
         {
             // Don't create duplicate traces.
             if (trace == NULL) {
@@ -49,11 +75,11 @@ namespace Abies
                 trace->set_time_resolution("1ns");
                 trace->set_time_unit(time_unit);
                 top->trace(trace, 99);
-                trace->open(filename);
+                trace->open(trace_path.c_str());
             }
         }
 
-        virtual void close_trace(void)
+        void close_trace(void)
         {
             if (trace) {
                 trace->close();
@@ -64,19 +90,18 @@ namespace Abies
 
         void cosim_attach(CoSim *extsim)
         {
-            if (extsim) {
-                m_extsims.push_back(extsim);
-            }
+            ext_sims.push_back(extsim);
         }
+
         void cosim_detach(CoSim *extsim)
         {
-            m_extsims.erase(std::remove(m_extsims.begin(), m_extsims.end(), extsim));
+            ext_sims.erase(std::remove(ext_sims.begin(), ext_sims.end(), extsim));
         }
 
         virtual void eval(void)
         {
             // Evaluate co-simulations.
-            for (auto sim : m_extsims) {
+            for (auto sim : ext_sims) {
                 sim->eval();
                 sim->update_slist();
             }
@@ -84,46 +109,34 @@ namespace Abies
             top->eval();
         }
 
+        void dump(uint64_t current_time)
+        {
+            trace->dump(current_time);
+        }
+
         virtual void tick(void)
         {
-            cycle_ctr++;
-            top->clk = 0;
+            // Initial.
             eval();
-            if (trace) {
-                trace->dump((vluint64_t)(cycle_ctr * clock_period - (clock_period/10)));
-            }
-
-            top->clk = 1;
+            dump(clk_->current());
+            // Rising edge.
+            clk_->next_edge();
             eval();
-            if (trace) {
-                trace->dump((vluint64_t)(cycle_ctr * clock_period));
-            }
-            top->clk = 0;
+            dump(clk_->current());
+            // Falling.
+            clk_->next_edge();
             eval();
-            if (trace) {
-                trace->dump((vluint64_t)(cycle_ctr * clock_period + (clock_period / 2)));
-                trace->flush();
-            }
+            dump(clk_->current());
+            trace->flush();
+            // Move trace to just before next rising edge.
+            clk_->next_edge(2);
         }
-        virtual void tick(unsigned int duration) {
+
+        virtual void tick(unsigned int duration)
+        {
             for (unsigned int i = 0; i < duration; i++) {
                 tick();
             }
-        }
-
-        // Hold in reset for N clock cycles.
-        virtual void reset(unsigned int duration)
-        {
-            // top->rst = 1;
-            // for (unsigned int i = 0; i < duration; i++) {
-            //     tick();
-            // }
-            // top->rst = 0;
-        }
-
-        uint64_t cycles(void)
-        {
-            return cycle_ctr;
         }
     };
 }

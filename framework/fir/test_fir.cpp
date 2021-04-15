@@ -12,9 +12,14 @@ using Abies::Testbench;
 TEST_GROUP(FirGroup)
 {
     Testbench<VFir> *tb;
+
     void setup()
     {
-        tb = new Testbench<VFir>;
+        // Create a new trace using the test name.
+        std::string test_name(UtestShell::getCurrent()->getName().asCharString());
+        std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
+
+        tb = new Testbench<VFir>(trace_path);
     }
 
     void teardown()
@@ -26,10 +31,9 @@ TEST_GROUP(FirGroup)
 
 TEST(FirGroup, basic)
 {
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "basic.vcd";
-    tb->open_trace(trace_string.c_str());
-    tb->reset(RESET_DURATION);
+    tb->top->rst = 1;
+    tb->tick(RESET_DURATION);
+    tb->top->rst = 0;
     // tb->tick();
     
     for (int i = 6; i < 20; i++) {
@@ -44,10 +48,9 @@ TEST(FirGroup, basic)
 
 TEST(FirGroup, bandpass)
 {
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "bandpass.vcd";
-    tb->open_trace(trace_string.c_str());
-    tb->reset(RESET_DURATION);
+    tb->top->rst = 1;
+    tb->tick(RESET_DURATION);
+    tb->top->rst = 0;
     tb->tick();
 
     int16_t ampl = 0;

@@ -12,9 +12,14 @@ using Abies::Testbench;
 TEST_GROUP(${module_class}Group)
 {
     Testbench<V${module_class}> *tb;
+
     void setup()
     {
-        tb = new Testbench<V${module_class}>;
+        // Create a new trace using the test name.
+        std::string test_name(UtestShell::getCurrent()->getName().asCharString());
+        std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
+
+        tb = new Testbench<V${module_class}>(trace_path);
     }
 
     void teardown()
@@ -25,9 +30,5 @@ TEST_GROUP(${module_class}Group)
 
 TEST(${module_class}Group, basic)
 {
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "basic.vcd";
-    tb->open_trace(trace_string.c_str());
-
     tb->tick(100);
 }
