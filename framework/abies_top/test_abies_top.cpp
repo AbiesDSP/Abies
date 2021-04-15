@@ -1,17 +1,17 @@
-#include "VI2SMTx.h"
+#include "VAbiesTop.h"
 #include "testbench.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
-#define TRACE_PATH_BASE "./traces/i2sm_tx/"
+#define TRACE_PATH_BASE "./traces/abies_top/"
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
 using Abies::Testbench;
 
-TEST_GROUP(I2SMTxGroup)
+TEST_GROUP(AbiesTopGroup)
 {
-    Testbench<VI2SMTx> *tb;
+    Testbench<VAbiesTop> *tb;
 
     void setup()
     {
@@ -19,7 +19,7 @@ TEST_GROUP(I2SMTxGroup)
         std::string test_name(UtestShell::getCurrent()->getName().asCharString());
         std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
 
-        tb = new Testbench<VI2SMTx>(trace_path);
+        tb = new Testbench<VAbiesTop>(trace_path);
     }
 
     void teardown()
@@ -28,7 +28,7 @@ TEST_GROUP(I2SMTxGroup)
     }
 };
 
-TEST(I2SMTxGroup, basic)
+TEST(AbiesTopGroup, basic)
 {
     tb->tick(1000);
 }

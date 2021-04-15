@@ -11,9 +11,14 @@ using Abies::Testbench;
 TEST_GROUP(PwmGroup)
 {
     Testbench<VPwm> *tb;
+
     void setup()
     {
-        tb = new Testbench<VPwm>;
+        // Create a new trace using the test name.
+        std::string test_name(UtestShell::getCurrent()->getName().asCharString());
+        std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
+
+        tb = new Testbench<VPwm>(trace_path);
     }
 
     void teardown()
@@ -27,12 +32,9 @@ TEST(PwmGroup, dc_check)
 {
     const unsigned int duty = 128;
 
-    // Opening the file here lets us save file names with the test name.
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "dc_check.vcd";
-    // Open trace for viewing.
-    tb->open_trace(trace_string.c_str());
-    tb->reset(RESET_DURATION);
+    tb->top->rst = 1;
+    tb->tick(RESET_DURATION);
+    tb->top->rst = 0;
 
     tb->top->duty = duty;
 

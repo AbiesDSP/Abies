@@ -12,10 +12,11 @@ module i2sm_tx #(
 ) (
     // I2S master transmitter bus
     i2s_b.m_tx i2s_o,
-    input logic en,
+    input logic rst,
     output logic rd_en, // Connect to fifo.
     input logic i_valid,
-    input logic [DW-1:0] i_sample
+    input logic [DW-1:0] l_sample,
+    input logic [DW-1:0] r_sample
 );
 
 /* verilator lint_off WIDTH */
@@ -32,20 +33,30 @@ initial i2s_o.lrclk = 0;
 
 // LR clock divider to generate lrclk and sclk
 always @(posedge clk) begin
-    lr_ctr <= lr_ctr + 1;
-    if (lr_ctr == 0) begin
-        i2s_o.lrclk <= !i2s_o.lrclk;
-    end
-    // sclk is half 
-    if (lr_ctr & 1) begin
-        i2s_o.sclk <= 1;
-    end else begin
+    if (rst) begin
+        lr_ctr <= 0;
+        i2s_o.lrclk <= 1;
         i2s_o.sclk <= 0;
+    end else begin
+        lr_ctr <= lr_ctr + 1;
+        if (lr_ctr == 0) begin
+            i2s_o.lrclk <= !i2s_o.lrclk;
+            // New data on falling edge of lrclk.
+            if (i2s_o.lrclk) begin
+                rd_en <= 1;
+            end
+        end
+        // sclk is half 
+        if (lr_ctr & 1) begin
+            i2s_o.sclk <= 1;
+        end else begin
+            i2s_o.sclk <= 0;
+        end
     end
 end
 
 // Input buffer
-logic [DW-1:0] sample_r;
+logic [(2*DW)-1:0] sample_r;
 // Bit counter
 // Need to count to 2*DW for whole message.
 logic [$clog2(DW << 1):0] counter;
@@ -53,17 +64,8 @@ initial counter = 0;
 //
 always @(posedge clk) begin
     if (i_valid) begin
-        sample_r <= i_sample;
+        sample_r <= {l_sample, r_sample};
     end
 end
 
-logic lr_last;
-//
-always @(posedge clk) begin
-    lr_last <= i2s_o.lrclk;
-    // Falling edge of lrclk. Clock in new sample.
-    if (lr_last && !i2s_o.lrclk) begin
-        counter <= 0;
-    end
-end
 endmodule

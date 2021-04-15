@@ -12,9 +12,14 @@ using Abies::Testbench;
 TEST_GROUP(DdsGroup)
 {
     Testbench<VDds> *tb;
+
     void setup()
     {
-        tb = new Testbench<VDds>;
+        // Create a new trace using the test name.
+        std::string test_name(UtestShell::getCurrent()->getName().asCharString());
+        std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
+
+        tb = new Testbench<VDds>(trace_path);
     }
 
     void teardown()
@@ -25,10 +30,9 @@ TEST_GROUP(DdsGroup)
 
 TEST(DdsGroup, basic)
 {
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "basic.vcd";
-    tb->open_trace(trace_string.c_str());
-    tb->reset(RESET_DURATION);
+    tb->top->rst = 1;
+    tb->tick(RESET_DURATION);
+    tb->top->rst = 0;
 
     unsigned int sample_div = 10; // sample clock.
 

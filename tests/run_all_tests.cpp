@@ -1,6 +1,7 @@
 #include "verilated.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
+IMPORT_TEST_GROUP(AbiesTopGroup);
 IMPORT_TEST_GROUP(SramArbiterGroup);
 IMPORT_TEST_GROUP(PwmGroup);
 IMPORT_TEST_GROUP(FirGroup);

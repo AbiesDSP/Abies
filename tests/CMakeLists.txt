@@ -1,8 +1,10 @@
 # Main test runner.
 add_executable(run_all_tests ${CMAKE_SOURCE_DIR}/tests/run_all_tests.cpp)
 target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
+target_link_libraries(run_all_tests PRIVATE CppUTest CppUTestExt)
 
 # Link all test groups
+target_link_libraries(run_all_tests PRIVATE test_abies_top)
 target_link_libraries(run_all_tests PRIVATE test_sram_arbiter)
 target_link_libraries(run_all_tests PRIVATE test_pwm)
 target_link_libraries(run_all_tests PRIVATE test_dds)

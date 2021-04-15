@@ -1,3 +1,4 @@
+add_subdirectory(abies_top)
 add_subdirectory(sram_arbiter)
 add_subdirectory(pwm)
 add_subdirectory(fir)

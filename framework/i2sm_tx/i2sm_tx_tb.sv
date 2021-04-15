@@ -9,10 +9,11 @@ module i2sm_tx_tb #(
     localparam LR_CTR_SIZE = $clog2(FS_RATIO)
 ) (
     input logic clk,
-    input logic en,
+    input logic rst,
     output logic rd_en,
     input logic i_valid,
-    input logic [DW-1:0] i_sample,
+    input logic [DW-1:0] l_sample,
+    input logic [DW-1:0] r_sample,
     // I2S master transmitter bus
     output logic sclk,
     output logic lrclk,
@@ -30,11 +31,12 @@ i2sm_tx #(
     .DW(DW),
     .FS_RATIO(FS_RATIO)
 ) i2sm_tx_inst (
+    .rst(rst),
     .i2s_o(i2s0),
-    .en(en),
     .rd_en(rd_en),
     .i_valid(i_valid),
-    .i_sample(i_sample)
+    .l_sample(l_sample),
+    .r_sample(r_sample)
 );
 
 endmodule

@@ -41,11 +41,11 @@ interface i2s_b #(parameter DW = 24) (input logic mclk);
         input mclk, sdi,
         output sclk, lrclk, sdo
     );
-    // DAC receiver (DAC IC)
+    // receiver (DAC IC)
     modport s_rx (
         input mclk, sclk, lrclk, sdo
     );
-    // ADC transmitter (ADC IC)
+    // transmitter (ADC IC)
     modport s_tx (
         input mclk, sclk, lrclk,
         output sdi

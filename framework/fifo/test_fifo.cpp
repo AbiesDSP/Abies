@@ -15,7 +15,11 @@ TEST_GROUP(FifoGroup)
 
     void setup()
     {
-        tb = new Testbench<VFifo>;
+        // Create a new trace using the test name.
+        std::string test_name(UtestShell::getCurrent()->getName().asCharString());
+        std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
+
+        tb = new Testbench<VFifo>(trace_path);
     }
 
     void teardown()
@@ -26,10 +30,6 @@ TEST_GROUP(FifoGroup)
 
 TEST(FifoGroup, write2read2)
 {
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "write2read2.vcd";
-    tb->open_trace(trace_string.c_str());
-
     tb->tick(10);
 
     for (int j = 0; j < 10; j++) {
@@ -55,10 +55,6 @@ TEST(FifoGroup, write2read2)
 
 TEST(FifoGroup, almostflags)
 {
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "almost.vcd";
-    tb->open_trace(trace_string.c_str());
-
     tb->tick(10);
 
     tb->top->i_wr = 1;
@@ -126,10 +122,6 @@ TEST(FifoGroup, almostflags)
 
 TEST(FifoGroup, overflow)
 {
-    std::string trace_string = TRACE_PATH_BASE;
-    trace_string += "overflow.vcd";
-    tb->open_trace(trace_string.c_str());
-
     tb->tick(10);
 
     // Write two elements into 4-deep fifo
