@@ -5,6 +5,7 @@ target_link_libraries(test_pwm PRIVATE CppUTest CppUTestExt)
 
 # Utility Libraries
 target_link_libraries(test_pwm PUBLIC testbench)
+target_link_libraries(test_pwm PRIVATE clk_gen)
 
 message(STATUS "Verilating pwm using pwm.sv")
 set(V_SRCS "")

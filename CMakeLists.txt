@@ -9,17 +9,7 @@ else()
     message(STATUS "Using Verilator found in $ENV{VERILATOR_ROOT}")
 endif()
 
-# Locate CppUTest
-# Find library?
-# if (DEFINED ENV{CPPUTEST_HOME})
-#     message(STATUS "Using CppUTest found in $ENV{CPPUTEST_HOME}")
-# else()
-#     message(FATAL_ERROR "CPPUTEST_HOME is not set. Set CPPUTEST_HOME in ~/.bashrc")
-#     return()
-# endif()
-
 add_subdirectory(util)
 add_subdirectory(models)
 add_subdirectory(framework)
 # add_subdirectory(abies-lib)
-add_subdirectory(tests)

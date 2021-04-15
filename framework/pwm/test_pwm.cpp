@@ -1,5 +1,6 @@
 #include "VPwm.h"
 #include "testbench.h"
+#include "clk_gen.h"
 #include "CppUTest/TestHarness.h"
 
 #define TRACE_PATH_BASE "./traces/pwm/"
@@ -7,10 +8,12 @@
 #define RESET_DURATION  10
 
 using Abies::Testbench;
+using Abies::ClkGen;
 
 TEST_GROUP(PwmGroup)
 {
     Testbench<VPwm> *tb;
+    ClkGen *clk;
 
     void setup()
     {
@@ -18,12 +21,15 @@ TEST_GROUP(PwmGroup)
         std::string test_name(UtestShell::getCurrent()->getName().asCharString());
         std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
 
+        clk = new ClkGen(10);
         tb = new Testbench<VPwm>(trace_path);
+        clk->connect(&tb->top->clk);
     }
 
     void teardown()
     {
         delete tb;
+        delete clk;
         tb = NULL;
     }
 };
