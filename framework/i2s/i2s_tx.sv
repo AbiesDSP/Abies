@@ -19,18 +19,19 @@ module i2s_tx #(
 );
 
 logic sclk_prev = 0, lrclk_prev = 1;
-logic [DW-1:0] sdo_reg = 0;
+logic [DW-1:0] sdo_reg = 0, r_reg = 0;
 logic sdo_pipe = 0;
-logic ch = 0;
+logic r_load = 0;
 
 assign sdo = sdo_pipe;
 
 // SDO shift register.
 always @(posedge clk) begin
-    if (rd_valid & !ch) begin
+    if (rd_valid) begin
         sdo_reg <= l_sample;
-    end else if (rd_valid & ch) begin
-        sdo_reg <= r_sample;
+        r_reg <= r_sample;
+    end else if (r_load) begin
+        sdo_reg <= r_reg;
     end else if (!sclk & sclk_prev) begin
         // Shift data on falling edge
         sdo_reg <= {sdo_reg[DW-2:0], 1'b0};
@@ -42,15 +43,14 @@ end
 // 
 always @(posedge clk) begin
     rd_en <= 0;
+    r_load <= 0;
     // L sample, request from fifo.
     if (!lrclk & lrclk_prev) begin
         rd_en <= 1;
-        ch <= 0;
     end
     // R sample
     if (lrclk & !lrclk_prev) begin
-        rd_en <= 1;
-        ch <= 1;
+        r_load <= 1;
     end
 end
 

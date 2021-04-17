@@ -11,6 +11,8 @@ list(APPEND V_SRCS "abies_top.sv")
 set(IDIRS "${CMAKE_SOURCE_DIR}/framework")
 list(APPEND IDIRS "${CMAKE_SOURCE_DIR}/framework/sram_arbiter")
 list(APPEND IDIRS "${CMAKE_SOURCE_DIR}/framework/pwm")
+list(APPEND IDIRS "${CMAKE_SOURCE_DIR}/framework/i2s")
+list(APPEND IDIRS "${CMAKE_SOURCE_DIR}/framework/dds")
 
 message(STATUS "Verilating abies_top using abies_top.sv as top")
 
@@ -20,7 +22,7 @@ verilate(test_abies_top TRACE
     SOURCES ${V_SRCS}
     DIRECTORY ${CMAKE_BINARY_DIR}/verilated
     PREFIX VAbiesTop
-    VERILATOR_ARGS ""
+    VERILATOR_ARGS -GWFM_FILE="${CMAKE_SOURCE_DIR}/mem/sin_w24_d10.mem"
 )
 
 # Create trace directories when libraries are built

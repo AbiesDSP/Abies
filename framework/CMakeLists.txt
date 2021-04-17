@@ -1,4 +1,4 @@
-# add_subdirectory(abies_top)
+add_subdirectory(abies_top)
 # add_subdirectory(sram_arbiter)
 # add_subdirectory(pwm)
 # add_subdirectory(fir)
@@ -15,7 +15,7 @@ target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
 target_link_libraries(run_all_tests PRIVATE CppUTest CppUTestExt)
 
 target_link_libraries(run_all_tests PRIVATE
-    # test_abies_top
+    test_abies_top
     # test_sram_arbiter
     # test_pwm
     # test_fir
