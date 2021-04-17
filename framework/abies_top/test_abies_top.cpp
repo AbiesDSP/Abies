@@ -31,6 +31,5 @@ TEST_GROUP(AbiesTopGroup)
 
 TEST(AbiesTopGroup, basic)
 {
-    tb->top->tuning = 32768;
     tb->tick(1000000);
 }

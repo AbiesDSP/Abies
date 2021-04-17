@@ -8,7 +8,6 @@ module abies_top #(
 ) (
     input logic clk,
     input logic rst,
-    input logic [15:0] tuning,
     output logic dac_sclk,
     output logic dac_lrclk,
     output logic dac_sdo,
@@ -23,7 +22,13 @@ assign rgb[1] = 1;
 assign rgb[2] = 1;
 
 logic rd_en, rd_valid;
-logic [DW-1:0] dds_sample;
+logic signed [DW-1:0] dds_sample;
+// logic signed [3:0] gain_shift = 2;
+
+logic [15:0] tuning = 32768;
+logic signed [DW-1:0] dds_scaled;
+
+assign dds_scaled = dds_sample / 4;
 
 dds #(
     .WFM_FILE(WFM_FILE),
@@ -61,8 +66,8 @@ i2s_tx #(
 ) i2sm_tx_inst (
     .clk(clk),
     .rst(rst),
-    .l_sample(dds_sample),
-    .r_sample(dds_sample),
+    .l_sample(dds_scaled),
+    .r_sample(dds_scaled),
     .rd_en(rd_en),
     .rd_valid(rd_valid),
     .sclk(dac_sclk),
