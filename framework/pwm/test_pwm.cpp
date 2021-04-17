@@ -21,8 +21,8 @@ TEST_GROUP(PwmGroup)
         std::string test_name(UtestShell::getCurrent()->getName().asCharString());
         std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
 
-        clk = new ClkGen(10);
-        tb = new Testbench<VPwm>(trace_path);
+        clk = new ClkGen(10000);
+        tb = new Testbench<VPwm>(trace_path, clk);
         clk->connect(&tb->top->clk);
     }
 

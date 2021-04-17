@@ -1,4 +1,4 @@
-`default_nettype none
+`timescale 1ns/1ps
 `include "audio_bus.sv"
 
 module dfb (

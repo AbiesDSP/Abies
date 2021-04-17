@@ -1,4 +1,5 @@
-`default_nettype none
+`timescale 1ns/1ps
+
 // Direct Digital Synthesis. Tunable, arbitrary waveform generator.
 module dds #(
     // LUT file. The table should contain one full period of the signal.
