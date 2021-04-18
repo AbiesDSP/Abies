@@ -10,8 +10,8 @@ module i2s_clkgen #(
     localparam SCLK_DIV = FS_RATIO / (4*(DW+1)),
     localparam SCLK_CTR_SIZE = $clog2(SCLK_DIV)
 ) (
-    i2s.clkgen clkgen,
-    input logic rst
+    input logic rst,
+    i2s.clkgen clkgen
 );
 
 /* verilator lint_off WIDTH */
