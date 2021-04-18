@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+`include "i2s.sv"
+
 // I2S module will run at 12.288MHz, independent of the framework bus clock.
 // It will pull data from an asynchronous fifo.
 module i2s_tx #(
@@ -13,17 +15,18 @@ module i2s_tx #(
     output logic rd_en,
     input logic rd_valid,
     // I2S Interface
-     input logic sclk,
-    input logic lrclk,
-    output logic sdo
+    i2s.tx tx
 );
 
+logic sclk, lrclk;
 logic sclk_prev = 0, lrclk_prev = 1;
 logic [DW-1:0] sdo_reg = 0, r_reg = 0;
 logic sdo_pipe = 0;
 logic r_load = 0;
 
-assign sdo = sdo_pipe;
+assign sclk = tx.sclk;
+assign lrclk = tx.lrclk;
+assign tx.sdo = sdo_pipe;
 
 // SDO shift register.
 always @(posedge clk) begin

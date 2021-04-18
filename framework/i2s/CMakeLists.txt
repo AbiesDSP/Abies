@@ -8,7 +8,7 @@ target_link_libraries(test_i2s_tx PUBLIC testbench)
 
 set(V_SRCS "")
 list(APPEND V_SRCS "i2s_tx.sv")
-list(APPEND V_SRCS "i2s_clk.sv")
+list(APPEND V_SRCS "i2s_clkgen.sv")
 list(APPEND V_SRCS "i2s_tb.sv")
 
 message(STATUS "Verilating i2s_tx using i2s_tx.sv as top")

@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
+`include "i2s.sv"
 
-module i2s_clk #(
+module i2s_clkgen #(
     // Serial Data Width. This will not pad any data.
     parameter DW = 24,
     // Sampling frequency ratio MCLK/LRCLK. 12.288MHz / 256 = 48kHz. 128: 96kHz
@@ -11,17 +12,16 @@ module i2s_clk #(
 ) (
     input logic clk,
     input logic rst,
-    // I2S Clock
-    output logic sclk,
-    output logic lrclk
+    i2s.clkgen clkgen
 );
 
 /* verilator lint_off WIDTH */
 logic [7:0] sclk_ctr = 0;
 logic [7:0] lr_ctr = 0;
+logic sclk = 0, lrclk = 1;
 
-initial sclk = 0;
-initial lrclk = 1;
+assign clkgen.sclk = sclk;
+assign clkgen.lrclk = lrclk;
 
 always @(posedge clk) begin
     if (rst) begin

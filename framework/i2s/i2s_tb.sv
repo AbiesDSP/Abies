@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
 
+`include "i2s.sv"
+
 // Wrapper for i2sm_tx that doesn't use interface ports.
 module i2s_tb #(
     // Number of bits transmitted. This module will not pad any data.
@@ -19,14 +21,19 @@ module i2s_tb #(
     output logic sdo
 );
 
-i2s_clk #(
+i2s #(.DW(DW)) i2s0(.clk(clk));
+
+assign sclk = i2s0.sclk;
+assign lrclk = i2s0.lrclk;
+assign sdo = i2s0.sdo;
+
+i2s_clkgen #(
     .DW(DW),
     .FS_RATIO(FS_RATIO)
-) i2s_clk_inst (
+) i2s_clkgen_inst (
     .clk(clk),
     .rst(rst),
-    .sclk(sclk),
-    .lrclk(lrclk)
+    .clkgen(i2s0)
 );
 
 i2s_tx #(
@@ -38,9 +45,7 @@ i2s_tx #(
     .r_sample(r_sample),
     .rd_en(rd_en),
     .rd_valid(rd_valid),
-    .sclk(sclk),
-    .lrclk(lrclk),
-    .sdo(sdo)
+    .tx(i2s0)
 );
 
 endmodule

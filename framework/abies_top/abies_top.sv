@@ -1,4 +1,5 @@
 `timescale 1ns/1ns
+`include "i2s.sv"
 
 module abies_top #(
     parameter DW = 24,
@@ -24,13 +25,10 @@ assign rgb[0] = 1;
 assign rgb[1] = 1;
 assign rgb[2] = 1;
 
-assign dac_mclk = clk;
-
 logic rst = 0;
 logic rd_en, rd_valid;
 logic lrclk_prev = 0;
 logic signed [DW-1:0] dds_sample;
-// logic signed [3:0] gain_shift = 2;
 
 logic [15:0] tuning = 32768;
 logic signed [DW-1:0] dds_scaled;
@@ -58,14 +56,20 @@ dds #(
     .wfm_din()
 );
 
-i2s_clk #(
+i2s #(.DW(DW)) dac_i2s(.clk(clk));
+
+assign dac_mclk = dac_i2s.clk;
+assign dac_sclk = dac_i2s.sclk;
+assign dac_lrclk = dac_i2s.lrclk;
+assign dac_sdi = dac_i2s.sdo;
+
+i2s_clkgen #(
     .DW(DW),
     .FS_RATIO(FS_RATIO)
-) i2s_clk_inst (
+) i2s_clkgen_inst (
     .clk(clk),
     .rst(rst),
-    .sclk(dac_sclk),
-    .lrclk(dac_lrclk)
+    .clkgen(dac_i2s)
 );
 
 i2s_tx #(
@@ -77,9 +81,7 @@ i2s_tx #(
     .r_sample(dds_scaled),
     .rd_en(rd_en),
     .rd_valid(rd_valid),
-    .sclk(dac_sclk),
-    .lrclk(dac_lrclk),
-    .sdo(dac_sdi)
+    .tx(dac_i2s)
 );
 
 endmodule
