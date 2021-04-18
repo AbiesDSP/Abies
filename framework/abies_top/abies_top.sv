@@ -43,7 +43,7 @@ dds #(
     .TW(16),
     .OW(DW),
     .PW(22),
-    .TABLE_TYPE("QUARTER"),
+    .TABLE_TYPE("FULL"),
     .RAM_PERFORMANCE("LOW_LATENCY")
 ) dds_inst (
     .clk(clk),

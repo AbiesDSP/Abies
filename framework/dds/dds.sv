@@ -14,9 +14,9 @@ module dds #(
     parameter PW = 15,
     // Parameter, type of table being used. Options are: "FULL", "HALF", and "QUARTER"
     // The data in the waveform table must match this selection.
-    parameter TABLE_TYPE = "QUARTER",
+    parameter TABLE_TYPE = "FULL",
     // Choose between "HIGH_PERFORMANCE" or "LOW_LATENCY"
-    parameter RAM_PERFORMANCE = "HIGH_PERFORMANCE"
+    parameter RAM_PERFORMANCE = "LOW_LATENCY"
 ) (
     input logic clk,
     input logic rst,
@@ -41,7 +41,7 @@ logic [OW-1:0] wfm_data = {OW{1'b0}};
 logic [OW-1:0] wfm_out;
 
 // ---------- Logic ----------
-logic wfm_rd_en = 1'b0;
+logic wfm_rd_en;
 logic [AW-1:0] wfm_raddr;
 logic [PW-1:0] phase_acc = {PW{1'b0}};
 logic phase_valid = 1'b0;
@@ -52,12 +52,12 @@ genvar negate_index;
 generate
     if (TABLE_TYPE == "FULL") begin: full_wave_table
         // No need for any pipelining when using full wave table.
-        always @(posedge clk) begin
-            wfm_raddr <= phase_acc[PW-1:PW-AW];
-            ampl <= wfm_out;
-            wfm_rd_en <= phase_valid;
-            valid <= ram_valid;
-        end
+        // always @(posedge clk) begin
+        assign wfm_raddr = phase_acc[PW-1:PW-AW];
+        assign ampl = wfm_out;
+        assign wfm_rd_en = phase_valid;
+        assign valid = ram_valid;
+        // end
     end else if (TABLE_TYPE == "HALF") begin: half_wave_table
         logic [RAM_LAT-1:0] negate = {RAM_LAT{1'b0}};
         always @(posedge clk) begin
