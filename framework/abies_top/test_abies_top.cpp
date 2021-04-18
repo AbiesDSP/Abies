@@ -6,7 +6,7 @@
 #define TRACE_PATH_BASE "./traces/abies_top/"
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
-#define AUDIO_CLK_PERIOD 81830
+#define AUDIO_CLK_PERIOD 83334
 
 using Abies::Testbench;
 

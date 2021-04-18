@@ -71,9 +71,6 @@ namespace Abies
             // Don't create duplicate traces.
             if (trace == NULL) {
                 trace = new VerilatedVcdC;
-                // std::string time_unit = std::to_string(clock_period / 2) + "ns";
-                // trace->set_time_resolution("1ns");
-                // trace->set_time_unit(time_unit);
                 top->trace(trace, 99);
                 trace->open(trace_path.c_str());
             }
