@@ -13,6 +13,7 @@ module i2s_tb #(
     input logic [DW-1:0] r_sample,
     output logic rd_en,
     input logic rd_valid,
+    output logic rd_early,
     // I2S master transmitter bus
     output logic sclk,
     output logic lrclk,
@@ -25,6 +26,7 @@ i2s_clk #(
 ) i2s_clk_inst (
     .clk(clk),
     .rst(rst),
+    .rd_early(rd_early),
     .sclk(sclk),
     .lrclk(lrclk)
 );

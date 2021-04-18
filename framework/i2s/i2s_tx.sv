@@ -21,7 +21,7 @@ module i2s_tx #(
 logic sclk_prev = 0, lrclk_prev = 1;
 logic [DW-1:0] sdo_reg = 0, r_reg = 0;
 logic sdo_pipe = 0;
-logic r_load = 0, ch = 0;
+logic r_load = 0;
 
 assign sdo = sdo_pipe;
 
@@ -35,7 +35,7 @@ always @(posedge clk) begin
     // R sample
     if (lrclk & !lrclk_prev)
         r_load <= 1;
-        
+    
     if (rd_valid) begin
         sdo_reg <= l_sample;
         r_reg <= r_sample;

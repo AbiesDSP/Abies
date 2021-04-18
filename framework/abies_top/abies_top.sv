@@ -48,7 +48,7 @@ dds #(
 ) dds_inst (
     .clk(clk),
     .rst(rst),
-    .ce(rd_early),
+    .ce(rd_en),
     .valid(rd_valid),
     .tuning_word(tuning),
     .ampl(dds_sample),
@@ -58,17 +58,14 @@ dds #(
     .wfm_din()
 );
 
-assign rd_early = lrclk_prev & !dac_lrclk;
-always @(posedge clk) begin
-    lrclk_prev <= dac_lrclk;
-end
-
 i2s_clk #(
     .DW(DW),
-    .FS_RATIO(FS_RATIO)
+    .FS_RATIO(FS_RATIO),
+    .PRE_FETCH(4)
 ) i2s_clk_inst (
     .clk(clk),
     .rst(rst),
+    .rd_early(rd_early),
     .sclk(dac_sclk),
     .lrclk(dac_lrclk)
 );
