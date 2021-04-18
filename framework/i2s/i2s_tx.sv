@@ -7,23 +7,22 @@ module i2s_tx #(
     // Number of bits transmitted. This module will not pad any data.
     parameter DW = 24
 ) (
-    input logic clk,
-    input logic rst,
+    input rst,
+    i2s.tx tx,
     // Fifo Interface
-    input logic [DW-1:0] l_sample,
-    input logic [DW-1:0] r_sample,
+    input logic [DW-1:0] ldata,
+    input logic [DW-1:0] rdata,
     output logic rd_en,
-    input logic rd_valid,
-    // I2S Interface
-    i2s.tx tx
+    input logic rd_valid
 );
 
-logic sclk, lrclk;
+logic clk, sclk, lrclk;
 logic sclk_prev = 0, lrclk_prev = 1;
 logic [DW-1:0] sdo_reg = 0, r_reg = 0;
 logic sdo_pipe = 0;
 logic r_load = 0;
 
+assign clk = tx.clk;
 assign sclk = tx.sclk;
 assign lrclk = tx.lrclk;
 assign tx.sdo = sdo_pipe;
@@ -40,8 +39,8 @@ always @(posedge clk) begin
         r_load <= 1;
     
     if (rd_valid) begin
-        sdo_reg <= l_sample;
-        r_reg <= r_sample;
+        sdo_reg <= ldata;
+        r_reg <= rdata;
     end else if (r_load) begin
         sdo_reg <= r_reg;
     end else if (!sclk & sclk_prev) begin

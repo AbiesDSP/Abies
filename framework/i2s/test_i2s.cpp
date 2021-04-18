@@ -1,9 +1,9 @@
-#include "VI2STx.h"
+#include "VI2S.h"
 #include "testbench.h"
 #include "CppUTest/TestHarness.h"
 #include <string>
 
-#define TRACE_PATH_BASE "./traces/i2s_tx/"
+#define TRACE_PATH_BASE "./traces/i2s/"
 #define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
@@ -15,9 +15,9 @@
 #define AUDIO_CLK_PERIOD 81830
 using Abies::Testbench;
 
-TEST_GROUP(I2STxGroup)
+TEST_GROUP(I2SGroup)
 {
-    Testbench<VI2STx> *tb;
+    Testbench<VI2S> *tb;
 
     void setup()
     {
@@ -25,7 +25,7 @@ TEST_GROUP(I2STxGroup)
         std::string test_name(UtestShell::getCurrent()->getName().asCharString());
         std::string trace_path(TRACE_PATH_BASE + test_name + ".vcd");
 
-        tb = new Testbench<VI2STx>(trace_path, AUDIO_CLK_PERIOD);
+        tb = new Testbench<VI2S>(trace_path, AUDIO_CLK_PERIOD);
     }
 
     void teardown()
@@ -34,20 +34,27 @@ TEST_GROUP(I2STxGroup)
     }
 };
 
-TEST(I2STxGroup, basic)
+TEST(I2SGroup, basic)
 {
+    unsigned int max_val = 420000;
     tb->top->rst = 1;
     tb->tick(10);
     tb->top->rst = 0;
-    for (unsigned int ii=0; ii<10; ii++) {
+
+    for (unsigned int ii=0; ii<max_val; ii+=1001) {
         while (!tb->top->rd_en) {
             tb->tick();
         }
-        tb->top->l_sample = 0xAAAAAA;
-        tb->top->r_sample = 0x555555;
+        tb->top->ldac = ii;
+        tb->top->rdac = ii;
         tb->top->rd_valid = 1;
         tb->tick();
         tb->top->rd_valid = 0;
-        tb->tick();
+        
+        while (!tb->top->adc_valid) {
+            tb->tick();
+        }
+        CHECK_EQUAL(ii, tb->top->ladc);
+        CHECK_EQUAL(ii, tb->top->radc);
     }
 }

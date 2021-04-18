@@ -12,7 +12,11 @@ module abies_top #(
     output logic dac_mclk,
     output logic dac_sclk,
     output logic dac_lrclk,
-    output logic dac_sdi,
+    output logic dac_sdo,
+    output logic adc_mclk,
+    output logic adc_sclk,
+    output logic adc_lrclk,
+    input logic adc_sdi,
     input logic btn[2],
     output logic led[2],
     output logic [2:0] rgb
@@ -56,32 +60,62 @@ dds #(
     .wfm_din()
 );
 
-i2s #(.DW(DW)) dac_i2s(.clk(clk));
+logic [DW-1:0] ladc, radc;
+logic adc_valid;
 
-assign dac_mclk = dac_i2s.clk;
-assign dac_sclk = dac_i2s.sclk;
-assign dac_lrclk = dac_i2s.lrclk;
-assign dac_sdi = dac_i2s.sdo;
+i2s #(.DW(DW)) i2sb(.clk(clk));
+
+assign dac_mclk = i2sb.clk;
+assign dac_sclk = i2sb.sclk;
+assign dac_lrclk = i2sb.lrclk;
+assign dac_sdo = i2sb.sdo;
+
+assign adc_mclk = i2sb.clk;
+assign adc_sclk = i2sb.sclk;
+assign adc_lrclk = i2sb.lrclk;
+assign i2sb.sdi = adc_sdi;
 
 i2s_clkgen #(
     .DW(DW),
     .FS_RATIO(FS_RATIO)
 ) i2s_clkgen_inst (
-    .clk(clk),
     .rst(rst),
-    .clkgen(dac_i2s)
+    .clkgen(i2sb)
 );
 
-i2s_tx #(
+i2s_bi #(
     .DW(DW)
-) i2sm_tx_inst (
-    .clk(clk),
+) i2s_bi_inst (
     .rst(rst),
-    .l_sample(dds_scaled),
-    .r_sample(dds_scaled),
-    .rd_en(rd_en),
-    .rd_valid(rd_valid),
-    .tx(dac_i2s)
+    .i2sb(i2sb),
+    .tx_ldata(dds_scaled),
+    .tx_rdata(dds_scaled),
+    .tx_rd_en(rd_en),
+    .tx_rd_valid(rd_valid),
+    .rx_ldata(ladc),
+    .rx_rdata(radc),
+    .rx_valid(adc_valid)
 );
+
+// i2s_tx #(
+//     .DW(DW)
+// ) i2s_tx_inst (
+//     .rst(rst),
+//     .tx(dac_i2s),
+//     .l_sample(dds_scaled),
+//     .r_sample(dds_scaled),
+//     .rd_en(rd_en),
+//     .rd_valid(rd_valid)
+//  );
+
+//  i2s_rx #(
+//      .DW(DW)
+//  ) i2s_rx_inst (
+//      .rst(rst),
+//      .rx(adc_i2s),
+//      .l_sample(l_adc),
+//      .r_sample(r_adc),
+//      .valid(adc_valid)
+//  );
 
 endmodule
