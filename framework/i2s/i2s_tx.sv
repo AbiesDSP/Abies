@@ -27,6 +27,15 @@ assign sdo = sdo_pipe;
 
 // SDO shift register.
 always @(posedge clk) begin
+    rd_en <= 0;
+    r_load <= 0;
+    // L sample, request from fifo.
+    if (!lrclk & lrclk_prev)
+        rd_en <= 1;
+    // R sample
+    if (lrclk & !lrclk_prev)
+        r_load <= 1;
+        
     if (rd_valid) begin
         sdo_reg <= l_sample;
         r_reg <= r_sample;
@@ -37,23 +46,6 @@ always @(posedge clk) begin
         sdo_reg <= {sdo_reg[DW-2:0], 1'b0};
         // One pipeline because of i2s.
         sdo_pipe <= sdo_reg[DW-1];
-    end
-end
-
-// 
-always @(posedge clk) begin
-    rd_en <= 0;
-    r_load <= 0;
-    // L sample, request from fifo.
-    if (!lrclk & lrclk_prev) begin
-        rd_en <= 1;
-        // r_load <= 1;
-        // ch <= 0;
-    end
-    // R sample
-    if (lrclk & !lrclk_prev) begin
-        r_load <= 1;
-        // ch <= 1;
     end
 end
 
