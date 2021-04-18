@@ -27,7 +27,7 @@ assign rgb[2] = 1;
 assign dac_mclk = clk;
 
 logic rst = 0;
-logic rd_en, rd_early, rd_valid;
+logic rd_en, rd_valid;
 logic lrclk_prev = 0;
 logic signed [DW-1:0] dds_sample;
 // logic signed [3:0] gain_shift = 2;
@@ -60,12 +60,10 @@ dds #(
 
 i2s_clk #(
     .DW(DW),
-    .FS_RATIO(FS_RATIO),
-    .PRE_FETCH(4)
+    .FS_RATIO(FS_RATIO)
 ) i2s_clk_inst (
     .clk(clk),
     .rst(rst),
-    .rd_early(rd_early),
     .sclk(dac_sclk),
     .lrclk(dac_lrclk)
 );
