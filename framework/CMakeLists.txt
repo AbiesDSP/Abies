@@ -2,7 +2,7 @@ add_subdirectory(abies_top)
 add_subdirectory(sram_arbiter)
 add_subdirectory(pwm)
 add_subdirectory(fir)
-add_subdirectory(i2sm_tx)
+add_subdirectory(i2s)
 add_subdirectory(fifo)
 add_subdirectory(dds)
 add_subdirectory(dfb)
@@ -19,7 +19,7 @@ target_link_libraries(run_all_tests PRIVATE
     test_sram_arbiter
     test_pwm
     test_fir
-    test_i2sm_tx
+    test_i2s_tx
     test_fifo
     test_dds
     test_dfb

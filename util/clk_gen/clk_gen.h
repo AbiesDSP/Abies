@@ -12,7 +12,7 @@ namespace Abies
     public:
         // All time units are ns.
         // Assume clock starts at 0, immediately after a falling edge.
-        ClkGen(uint32_t period) : period_(period), clk_(NULL), current_time_(0)
+        ClkGen(uint64_t period) : period_(period), clk_(NULL), current_time_(0)
         {
         };
         ~ClkGen() {};
@@ -22,7 +22,7 @@ namespace Abies
             clk_ = clk;
         }
 
-        uint32_t period(void) {return period_;};
+        uint64_t period(void) {return period_;};
 
         uint64_t current(void)
         {
@@ -31,9 +31,9 @@ namespace Abies
 
         void next_edge(uint32_t offset=0)
         {
-            uint32_t fall_remaining = period_ - (current_time_ % period_);
-            uint32_t rise_remaining = period_ - ((current_time_ + period_ / 2) % period_);
-            uint32_t next;
+            uint64_t fall_remaining = period_ - (current_time_ % period_);
+            uint64_t rise_remaining = period_ - ((current_time_ + period_ / 2) % period_);
+            uint64_t next;
 
             if (!rise_remaining) {
                 next = fall_remaining;
@@ -50,7 +50,7 @@ namespace Abies
         }
 
     public:
-        uint32_t period_;
+        uint64_t period_;
         uint64_t current_time_;
     private:
         uint8_t *clk_;

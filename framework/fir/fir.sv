@@ -1,5 +1,4 @@
-// Fir using a single multiply and bram for sample/coef storage.
-`default_nettype none
+`timescale 1ns/1ps
 
 module fir #(
     parameter N_TAPS = 21,

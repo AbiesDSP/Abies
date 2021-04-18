@@ -1,4 +1,4 @@
-`default_nettype none
+`timescale 1ns/1ps
 
 module dfb_tb(
     input logic clk,

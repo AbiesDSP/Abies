@@ -1,4 +1,4 @@
-`default_nettype none
+`timescale 1ns/1ps
 
 module sram_arbiter #(
     parameter DW = 8,

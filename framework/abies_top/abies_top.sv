@@ -1,80 +1,85 @@
-`default_nettype none
+`timescale 1ns/1ns
 
-module abies_top (
+module abies_top #(
+    parameter DW = 24,
+    parameter FS_RATIO = 256,
+    parameter WFM_FILE = "sin_w24_d10.mem",
+    parameter DEPTH = 1024
+) (
     input logic clk,
-    input logic rst,
-    output logic [1:0] led,
-    output logic [2:0] rgb,
-    output logic [18:0] sram_addr,
-    inout logic [7:0] sram_dq,
-    output logic sram_ce_n,
-    output logic sram_oe_n,
-    output logic sram_we_n
+    // input logic rst,
+    output logic dac_mclk,
+    output logic dac_sclk,
+    output logic dac_lrclk,
+    output logic dac_sdi,
+    input logic btn[2],
+    output logic led[2],
+    output logic [2:0] rgb
 );
 
-logic [5:0] counter;
-logic wea;
-logic [18:0] addra;
-logic [7:0] data_wr;
-logic [7:0] data_rd;
-
-logic [7:0] sram_dat_wr;
-assign sram_dq = !sram_we_n ? sram_dat_wr : 8'bZ;
-
 // Turn unused leds off.
-assign led[1] = 0;
+assign led[0] = 0;
+assign led[1] = 1;
 assign rgb[0] = 1;
 assign rgb[1] = 1;
 assign rgb[2] = 1;
 
-sram_arbiter #(
-    .AW(19),
-    .DW(8),
-    .RD_LAT(1)
-) sram_arbiter (
+assign dac_mclk = clk;
+
+logic rst = 0;
+logic rd_en, rd_valid;
+logic lrclk_prev = 0;
+logic signed [DW-1:0] dds_sample;
+// logic signed [3:0] gain_shift = 2;
+
+logic [15:0] tuning = 32768;
+logic signed [DW-1:0] dds_scaled;
+
+assign dds_scaled = dds_sample / 8;
+
+dds #(
+    .WFM_FILE(WFM_FILE),
+    .DEPTH(DEPTH),
+    .TW(16),
+    .OW(DW),
+    .PW(22),
+    .TABLE_TYPE("FULL"),
+    .RAM_PERFORMANCE("LOW_LATENCY")
+) dds_inst (
     .clk(clk),
     .rst(rst),
-    .en(1),
-    .addra(addra),
-    .data_wr(data_wr),
-    .data_rd(data_rd),
-    .ena(1),
-    .busya(),
-    .wea(wea),
-    .valida(),
-    .sram_addr(sram_addr),
-    .sram_ce_n(sram_ce_n),
-    .sram_oe_n(sram_oe_n),
-    .sram_we_n(sram_we_n),
-    .sram_dq_wr(sram_dat_wr),
-    .sram_dq_rd(sram_dq)
+    .ce(rd_en),
+    .valid(rd_valid),
+    .tuning_word(tuning),
+    .ampl(dds_sample),
+    .start_phase(0),
+    .wfm_wea(),
+    .wfm_waddr(),
+    .wfm_din()
 );
 
-pwm #(
-    .DW(8)
-) pwm_0 (
+i2s_clk #(
+    .DW(DW),
+    .FS_RATIO(FS_RATIO)
+) i2s_clk_inst (
     .clk(clk),
     .rst(rst),
-    .duty(data_rd),
-    .q(led[0])
+    .sclk(dac_sclk),
+    .lrclk(dac_lrclk)
 );
 
-// Load SRAM with ramp, then switch to read-only.
-always @(posedge clk) begin
-    if (rst) begin
-        data_wr <= 0;
-        addra <= 0;
-        wea <= 1;
-        counter <= '1;
-    end else begin
-        counter <= counter - 1;
-        if (counter == 0) begin
-            data_wr <= addra[18:11];
-            addra <= addra + 1;
-            if (addra == 524287) begin
-                wea <= 0;
-            end
-        end
-    end
-end
+i2s_tx #(
+    .DW(DW)
+) i2sm_tx_inst (
+    .clk(clk),
+    .rst(rst),
+    .l_sample(dds_scaled),
+    .r_sample(dds_scaled),
+    .rd_en(rd_en),
+    .rd_valid(rd_valid),
+    .sclk(dac_sclk),
+    .lrclk(dac_lrclk),
+    .sdo(dac_sdi)
+);
+
 endmodule
