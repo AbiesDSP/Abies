@@ -31,5 +31,5 @@ TEST_GROUP(AbiesTopGroup)
 
 TEST(AbiesTopGroup, basic)
 {
-    tb->tick(1000000);
+    tb->tick(10000);
 }

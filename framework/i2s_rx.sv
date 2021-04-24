@@ -1,29 +1,23 @@
-`timescale 1ns/1ps
-`include "i2s.sv"
-
 module i2s_rx #(
     parameter DW = 24
 ) (
+    input logic clk,
     input logic rst,
-    i2s.rx rx,
     output logic [DW-1:0] ldata,
     output logic [DW-1:0] rdata,
-    output logic valid
+    output logic valid,
+    input logic sclk,
+    input logic lrclk,
+    input logic sdi
 );
 
 // localparam SDCW = $clog2(DW+1);
 localparam SDCW = 7;
 
-logic clk, sclk, lrclk, sdi;
 logic sclk_prev = 0, lrclk_prev = 1;
 logic ch = 0, done = 0;
 logic [SDCW-1:0] sd_ctr = 0;
 logic [DW-1:0] sd_shift = 0;
-
-assign clk = rx.clk;
-assign sclk = rx.sclk;
-assign lrclk = rx.lrclk;
-assign sdi = rx.sdi;
 
 always @(posedge clk) begin
     done <= 0;

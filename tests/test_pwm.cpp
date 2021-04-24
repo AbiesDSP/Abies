@@ -4,7 +4,6 @@
 #include "CppUTest/TestHarness.h"
 
 #define TRACE_PATH_BASE "./traces/pwm/"
-#define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
 using Abies::Testbench;

@@ -1,6 +1,3 @@
-`timescale 1ns/1ps
-`include "i2s.sv"
-
 module i2s_clkgen #(
     // Serial Data Width. This will not pad any data.
     parameter DW = 24,
@@ -10,18 +7,17 @@ module i2s_clkgen #(
     localparam SCLK_DIV = FS_RATIO / (4*(DW+1)),
     localparam SCLK_CTR_SIZE = $clog2(SCLK_DIV)
 ) (
+    input logic clk,
     input logic rst,
-    i2s.clkgen clkgen
+    output logic sclk,
+    output logic lrclk
 );
 
 /* verilator lint_off WIDTH */
 logic [7:0] sclk_ctr = 0;
 logic [7:0] lr_ctr = 0;
-logic clk, sclk = 0, lrclk = 1;
 
-assign clk = clkgen.clk;
-assign clkgen.sclk = sclk;
-assign clkgen.lrclk = lrclk;
+initial lrclk = 1;
 
 always @(posedge clk) begin
     if (rst) begin

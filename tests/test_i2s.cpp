@@ -3,8 +3,7 @@
 #include "CppUTest/TestHarness.h"
 #include <string>
 
-#define TRACE_PATH_BASE "./traces/i2s/"
-#define CLOCK_PERIOD    10
+#define TRACE_PATH_BASE "./traces/i2s_tb/"
 #define RESET_DURATION  10
 
 /* Audio clock period
@@ -42,19 +41,19 @@ TEST(I2SGroup, basic)
     tb->top->rst = 0;
 
     for (unsigned int ii=0; ii<max_val; ii+=1001) {
-        while (!tb->top->rd_en) {
+        while (!tb->top->tx_rd_en) {
             tb->tick();
         }
-        tb->top->ldac = ii;
-        tb->top->rdac = ii;
-        tb->top->rd_valid = 1;
+        tb->top->tx_ldata = ii;
+        tb->top->tx_rdata = ii;
+        tb->top->tx_rd_valid = 1;
         tb->tick();
-        tb->top->rd_valid = 0;
+        tb->top->tx_rd_valid = 0;
         
-        while (!tb->top->adc_valid) {
+        while (!tb->top->rx_valid) {
             tb->tick();
         }
-        CHECK_EQUAL(ii, tb->top->ladc);
-        CHECK_EQUAL(ii, tb->top->radc);
+        CHECK_EQUAL(ii, tb->top->rx_ldata);
+        CHECK_EQUAL(ii, tb->top->rx_rdata);
     }
 }

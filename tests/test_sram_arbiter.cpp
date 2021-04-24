@@ -7,7 +7,6 @@
 #include <math.h>
 
 #define TRACE_PATH_BASE "./traces/sram_arbiter/"
-#define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
 using Abies::Testbench;

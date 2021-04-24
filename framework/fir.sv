@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module fir #(
     parameter N_TAPS = 21,
     parameter IDW = $clog2(21), // $clog2(N_TAPS)

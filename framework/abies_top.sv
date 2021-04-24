@@ -1,6 +1,3 @@
-`timescale 1ns/1ns
-`include "i2s.sv"
-
 module abies_top #(
     parameter DW = 24,
     parameter FS_RATIO = 256,
@@ -63,38 +60,44 @@ dds #(
 logic [DW-1:0] ladc, radc;
 logic adc_valid;
 
-i2s #(.DW(DW)) i2sb(.clk(clk));
+logic i2s_sclk, i2s_lrclk;
 
-assign dac_mclk = i2sb.clk;
-assign dac_sclk = i2sb.sclk;
-assign dac_lrclk = i2sb.lrclk;
-assign dac_sdo = i2sb.sdo;
+assign dac_mclk = clk;
+assign dac_sclk = i2s_sclk;
+assign dac_lrclk = i2s_lrclk;
+// assign dac_sdo = i2s_sdo;
 
-assign adc_mclk = i2sb.clk;
-assign adc_sclk = i2sb.sclk;
-assign adc_lrclk = i2sb.lrclk;
-assign i2sb.sdi = adc_sdi;
+assign adc_mclk = clk;
+assign adc_sclk = i2s_sclk;
+assign adc_lrclk = i2s_lrclk;
+// assign i2sb.sdi = adc_sdi;
 
 i2s_clkgen #(
     .DW(DW),
     .FS_RATIO(FS_RATIO)
 ) i2s_clkgen_inst (
+    .clk(clk),
     .rst(rst),
-    .clkgen(i2sb)
+    .sclk(i2s_sclk),
+    .lrclk(i2s_lrclk)
 );
 
-i2s_bi #(
+i2s #(
     .DW(DW)
-) i2s_bi_inst (
+) i2s_inst (
+    .clk(clk),
     .rst(rst),
-    .i2sb(i2sb),
     .tx_ldata(dds_scaled),
     .tx_rdata(dds_scaled),
     .tx_rd_en(rd_en),
     .tx_rd_valid(rd_valid),
     .rx_ldata(ladc),
     .rx_rdata(radc),
-    .rx_valid(adc_valid)
+    .rx_valid(adc_valid),
+    .sclk(i2s_sclk),
+    .lrclk(i2s_lrclk),
+    .sdo(dac_sdo),
+    .sdi(adc_sdi)
 );
 
 // i2s_tx #(

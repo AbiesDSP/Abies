@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module pwm #(
     parameter DW = 8
 ) (
