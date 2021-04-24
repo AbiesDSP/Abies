@@ -10,15 +10,14 @@ module cobs_decode #(
 ) (
     input logic clk,
     input logic rst,
+    output logic error,
     // Encoded input stream.
     input logic [DW-1:0] i_data,
     input logic i_valid,
-    output logic o_ready,
     input logic i_last,
     // Decoded output stream.
     output logic [DW-1:0] o_data,
     output logic o_valid,
-    input logic i_ready,
     output logic o_last
 );
 
@@ -44,6 +43,7 @@ always @(posedge clk) begin
             code <= i_data;
             code_lock <= i_data;
             code_load <= 0;
+            error <= 0;
         end else begin
             if (code_load)
                 code <= code_lock;
@@ -60,6 +60,10 @@ always @(posedge clk) begin
                 state <= i_data != 0;
                 o_data <= 0;
                 code_load <= 1;
+            end else if (code == 0) begin
+                // Error?
+                error <= 1;
+                state <= 0;
             end
         end
     end
