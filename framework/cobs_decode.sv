@@ -14,10 +14,11 @@ module cobs_decode #(
     // Encoded input stream.
     input logic [DW-1:0] i_data,
     input logic i_valid,
-    input logic i_last,
+    output logic o_ready,
     // Decoded output stream.
     output logic [DW-1:0] o_data,
     output logic o_valid,
+    input logic i_ready,
     output logic o_last
 );
 
@@ -30,13 +31,16 @@ logic code_load = 0;
 // Byte should be a 0 at this point, or a new code.
 localparam LAST_CODE = 1;
 
+assign o_ready = 1;
+initial error = 0;
+
 always @(posedge clk) begin
     o_valid <= 0;
     o_last <= 0;
     code_load <= 0;
     if (rst) begin
         state <= 0;
-    end else if(i_valid) begin
+    end else if(i_valid & o_ready) begin
         // Currently in idle. Reset code.
         if (!state) begin
             state <= 1;

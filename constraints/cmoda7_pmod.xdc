@@ -26,3 +26,7 @@ set_property -dict { PACKAGE_PIN H17   IOSTANDARD LVCMOS33 } [get_ports { adc_mc
 set_property -dict { PACKAGE_PIN H19   IOSTANDARD LVCMOS33 } [get_ports { adc_lrclk }]; #IO_L4P_T0_D04_14 Sch=ja[8]
 set_property -dict { PACKAGE_PIN J19   IOSTANDARD LVCMOS33 } [get_ports { adc_sclk }]; #IO_L6N_T0_D08_VREF_14 Sch=ja[9]
 set_property -dict { PACKAGE_PIN K18   IOSTANDARD LVCMOS33 } [get_ports { adc_sdi }]; #IO_L8N_T1_D12_14 Sch=ja[10]
+
+## UART
+set_property -dict { PACKAGE_PIN J18   IOSTANDARD LVCMOS33 } [get_ports { ftdi_rx }]; #IO_L7N_T1_D10_14 Sch=uart_rxd_out
+set_property -dict { PACKAGE_PIN J17   IOSTANDARD LVCMOS33 } [get_ports { ftdi_tx }]; #IO_L7P_T1_D09_14 Sch=uart_txd_in

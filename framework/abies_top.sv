@@ -16,11 +16,15 @@ module abies_top #(
     input logic adc_sdi,
     input logic btn[2],
     output logic led[2],
-    output logic [2:0] rgb
+    output logic [2:0] rgb,
+    output logic ftdi_rx,
+    input logic ftdi_tx
 );
 
+logic led_toggle = 0;
+
 // Turn unused leds off.
-assign led[0] = 0;
+assign led[0] = led_toggle;
 assign led[1] = 1;
 assign rgb[0] = 1;
 assign rgb[1] = 1;
@@ -62,6 +66,10 @@ logic adc_valid;
 
 logic i2s_sclk, i2s_lrclk;
 
+logic [7:0] uart_rx_data, cmd_dec_data;
+logic uart_rx_valid, cmd_dec_ready, cmd_dec_valid, cmd_dec_last;
+logic last_prev = 0;
+
 assign dac_mclk = clk;
 assign dac_sclk = i2s_sclk;
 assign dac_lrclk = i2s_lrclk;
@@ -100,25 +108,45 @@ i2s #(
     .sdi(adc_sdi)
 );
 
-// i2s_tx #(
-//     .DW(DW)
-// ) i2s_tx_inst (
-//     .rst(rst),
-//     .tx(dac_i2s),
-//     .l_sample(dds_scaled),
-//     .r_sample(dds_scaled),
-//     .rd_en(rd_en),
-//     .rd_valid(rd_valid)
-//  );
+// BAUD 26: 57600
+uart #(
+    .DATA_WIDTH(8),
+    .PRESCALE(26)
+) uart_main (
+    .clk(clk),
+    .rst(rst),
+    .s_axis_tdata(0),
+    .s_axis_tvalid(0),
+    .s_axis_tready(),
+    .m_axis_tdata(uart_rx_data),
+    .m_axis_tvalid(uart_rx_valid),
+    .m_axis_tready(cmd_dec_ready),
+    .rxd(ftdi_tx),
+    .txd(ftdi_rx),
+    .tx_busy(),
+    .rx_busy(),
+    .rx_overrun_error(),
+    .rx_frame_error()
+);
 
-//  i2s_rx #(
-//      .DW(DW)
-//  ) i2s_rx_inst (
-//      .rst(rst),
-//      .rx(adc_i2s),
-//      .l_sample(l_adc),
-//      .r_sample(r_adc),
-//      .valid(adc_valid)
-//  );
+cobs_decode cmd_decode (
+    .clk(clk),
+    .rst(rst),
+    .error(),
+    .i_data(uart_rx_data),
+    .i_valid(uart_rx_valid),
+    .o_ready(cmd_dec_ready),
+    .o_data(cmd_dec_data),
+    .o_valid(cmd_dec_valid),
+    .i_ready(1),
+    .o_last(cmd_dec_last)
+);
+
+//always @(posedge clk) begin
+//    last_prev <= cmd_dec_last;
+//    if (cmd_dec_last & !last_prev) begin
+//        led_toggle <= !led_toggle;
+//    end
+//end
 
 endmodule

@@ -1,7 +1,7 @@
 #include "verilated.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
-// IMPORT_TEST_GROUP(AbiesTopGroup);
+IMPORT_TEST_GROUP(AbiesTopGroup);
 // IMPORT_TEST_GROUP(SramArbiterGroup);
 // IMPORT_TEST_GROUP(PwmGroup);
 // IMPORT_TEST_GROUP(FirGroup);
@@ -10,6 +10,7 @@
 // IMPORT_TEST_GROUP(DdsGroup);
 IMPORT_TEST_GROUP(CobsEncodeGroup);
 IMPORT_TEST_GROUP(CobsDecodeGroup);
+IMPORT_TEST_GROUP(UartGroup);
 
 int main(int argc, char** argv)
 {
