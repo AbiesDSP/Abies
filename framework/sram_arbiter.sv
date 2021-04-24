@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module sram_arbiter #(
     parameter DW = 8,
     parameter AW = 19,

@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#define DEFAULT_CLOCK_PERIOD    (10)
+#define DEFAULT_CLOCK_PERIOD    (10000)
 
 namespace Abies
 {

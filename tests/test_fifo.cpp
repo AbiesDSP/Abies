@@ -4,7 +4,6 @@
 #include <string>
 
 #define TRACE_PATH_BASE "./traces/fifo/"
-#define CLOCK_PERIOD    10
 #define RESET_DURATION  10
 
 using Abies::Testbench;

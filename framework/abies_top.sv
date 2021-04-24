@@ -1,5 +1,3 @@
-`timescale 1ns/1ns
-
 module abies_top #(
     parameter DW = 24,
     parameter FS_RATIO = 256,
@@ -11,7 +9,11 @@ module abies_top #(
     output logic dac_mclk,
     output logic dac_sclk,
     output logic dac_lrclk,
-    output logic dac_sdi,
+    output logic dac_sdo,
+    output logic adc_mclk,
+    output logic adc_sclk,
+    output logic adc_lrclk,
+    input logic adc_sdi,
     input logic btn[2],
     output logic led[2],
     output logic [2:0] rgb
@@ -24,13 +26,10 @@ assign rgb[0] = 1;
 assign rgb[1] = 1;
 assign rgb[2] = 1;
 
-assign dac_mclk = clk;
-
 logic rst = 0;
 logic rd_en, rd_valid;
 logic lrclk_prev = 0;
 logic signed [DW-1:0] dds_sample;
-// logic signed [3:0] gain_shift = 2;
 
 logic [15:0] tuning = 32768;
 logic signed [DW-1:0] dds_scaled;
@@ -58,28 +57,68 @@ dds #(
     .wfm_din()
 );
 
-i2s_clk #(
+logic [DW-1:0] ladc, radc;
+logic adc_valid;
+
+logic i2s_sclk, i2s_lrclk;
+
+assign dac_mclk = clk;
+assign dac_sclk = i2s_sclk;
+assign dac_lrclk = i2s_lrclk;
+// assign dac_sdo = i2s_sdo;
+
+assign adc_mclk = clk;
+assign adc_sclk = i2s_sclk;
+assign adc_lrclk = i2s_lrclk;
+// assign i2sb.sdi = adc_sdi;
+
+i2s_clkgen #(
     .DW(DW),
     .FS_RATIO(FS_RATIO)
-) i2s_clk_inst (
+) i2s_clkgen_inst (
     .clk(clk),
     .rst(rst),
-    .sclk(dac_sclk),
-    .lrclk(dac_lrclk)
+    .sclk(i2s_sclk),
+    .lrclk(i2s_lrclk)
 );
 
-i2s_tx #(
+i2s #(
     .DW(DW)
-) i2sm_tx_inst (
+) i2s_inst (
     .clk(clk),
     .rst(rst),
-    .l_sample(dds_scaled),
-    .r_sample(dds_scaled),
-    .rd_en(rd_en),
-    .rd_valid(rd_valid),
-    .sclk(dac_sclk),
-    .lrclk(dac_lrclk),
-    .sdo(dac_sdi)
+    .tx_ldata(dds_scaled),
+    .tx_rdata(dds_scaled),
+    .tx_rd_en(rd_en),
+    .tx_rd_valid(rd_valid),
+    .rx_ldata(ladc),
+    .rx_rdata(radc),
+    .rx_valid(adc_valid),
+    .sclk(i2s_sclk),
+    .lrclk(i2s_lrclk),
+    .sdo(dac_sdo),
+    .sdi(adc_sdi)
 );
+
+// i2s_tx #(
+//     .DW(DW)
+// ) i2s_tx_inst (
+//     .rst(rst),
+//     .tx(dac_i2s),
+//     .l_sample(dds_scaled),
+//     .r_sample(dds_scaled),
+//     .rd_en(rd_en),
+//     .rd_valid(rd_valid)
+//  );
+
+//  i2s_rx #(
+//      .DW(DW)
+//  ) i2s_rx_inst (
+//      .rst(rst),
+//      .rx(adc_i2s),
+//      .l_sample(l_adc),
+//      .r_sample(r_adc),
+//      .valid(adc_valid)
+//  );
 
 endmodule

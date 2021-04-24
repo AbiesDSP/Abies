@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module fifo #(
     parameter DW = 24,
     parameter DEPTH = 4,
