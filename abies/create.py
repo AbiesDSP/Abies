@@ -33,7 +33,7 @@ def create_module(args, template_filter):
     framework_dir = os.path.join(os.getcwd(), 'framework/')
     tests_dir = os.path.join(os.getcwd(), 'tests/')
 
-    if os.path.exists(os.path.join(framework_dir, args.module)):
+    if os.path.exists(os.path.join(framework_dir, args.module+'.sv')):
         print("Module: '" + args.module + "' already exists!")
         return
 
