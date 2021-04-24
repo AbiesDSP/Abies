@@ -60,10 +60,11 @@ always @(posedge clk) begin
                 state <= i_data != 0;
                 o_data <= 0;
                 code_load <= 1;
-            end else if (code == 0) begin
-                // Error?
-                error <= 1;
-                state <= 0;
+            end else begin
+                if (i_data == 0) begin
+                    error <= 1;
+                    state <= 0;
+                end
             end
         end
     end
