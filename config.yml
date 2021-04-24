@@ -1,0 +1,12 @@
+# Default configuration file. Modify this file or specify a different file on the command line.
+vivado_location: "/tools/Xilinx/Vivado/"
+vivado_version: "2019.2"
+work_root: "abies-viv/"
+tool: vivado
+synth_tool: vivado
+part_family: xc7
+part: xc7a35tcpg236-1
+source_mgmt_mode: All
+
+project_name: abies 
+top_module: abies_top
