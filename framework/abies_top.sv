@@ -142,11 +142,11 @@ cobs_decode cmd_decode (
     .o_last(cmd_dec_last)
 );
 
-//always @(posedge clk) begin
-//    last_prev <= cmd_dec_last;
-//    if (cmd_dec_last & !last_prev) begin
-//        led_toggle <= !led_toggle;
-//    end
-//end
+always @(posedge clk) begin
+   last_prev <= cmd_dec_last;
+   if (cmd_dec_last & !last_prev) begin
+       led_toggle <= !led_toggle;
+   end
+end
 
 endmodule
