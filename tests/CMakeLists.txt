@@ -17,7 +17,7 @@ macro(VModule top mod_name test_name vargs)
         PREFIX ${mod_name}
         VERILATOR_ARGS ${vargs}
     )
-    message(${top})
+
     # Create trace directories when libraries are built
     add_custom_command(TARGET ${test_name}
         POST_BUILD
