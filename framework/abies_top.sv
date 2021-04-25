@@ -67,7 +67,11 @@ logic adc_valid;
 logic i2s_sclk, i2s_lrclk;
 
 logic [7:0] uart_rx_data, cmd_dec_data;
-logic uart_rx_valid, cmd_dec_ready, cmd_dec_valid, cmd_dec_last;
+logic uart_rx_valid, uart_tx_ready, cmd_dec_ready, cmd_dec_valid, cmd_dec_last, cmd_ready, cmd_valid;
+logic enc_ready, enc_valid, enc_last;
+
+logic [7:0] cmd_data, enc_data;
+// logic [23:0] cmd_data;
 logic last_prev = 0;
 
 assign dac_mclk = clk;
@@ -115,9 +119,9 @@ uart #(
 ) uart_main (
     .clk(clk),
     .rst(rst),
-    .s_axis_tdata(0),
-    .s_axis_tvalid(0),
-    .s_axis_tready(),
+    .s_axis_tdata(enc_data),
+    .s_axis_tvalid(enc_valid),
+    .s_axis_tready(uart_tx_ready),
     .m_axis_tdata(uart_rx_data),
     .m_axis_tvalid(uart_rx_valid),
     .m_axis_tready(cmd_dec_ready),
@@ -133,20 +137,44 @@ cobs_decode cmd_decode (
     .clk(clk),
     .rst(rst),
     .error(),
+    // Encoded input stream.
     .i_data(uart_rx_data),
     .i_valid(uart_rx_valid),
     .o_ready(cmd_dec_ready),
+    // Decoded output stream.
     .o_data(cmd_dec_data),
     .o_valid(cmd_dec_valid),
-    .i_ready(1),
+    .i_ready(enc_ready),
     .o_last(cmd_dec_last)
 );
 
-always @(posedge clk) begin
-   last_prev <= cmd_dec_last;
-   if (cmd_dec_last & !last_prev) begin
-       led_toggle <= !led_toggle;
-   end
-end
+// cmd_parse #(
+//     .AW(8),
+//     .DW(24),
+//     .FRAME_BYTES(5)
+// ) cmd_parse_inst (
+//     .clk(clk),
+//     .rst(rst),
+//     .i_data(cmd_dec_data),
+//     .i_valid(cmd_dec_valid),
+//     .o_ready(cmd_ready),
+//     .i_last(cmd_dec_last),
+//     .o_addr(cmd_addr),
+//     .o_data(cmd_data),
+//     .o_valid(cmd_valid)
+// );
+
+cobs_encode cobs_encode_inst (
+    .clk(clk),
+    .rst(rst),
+    .i_data(cmd_dec_data),
+    .i_valid(cmd_dec_valid),
+    .o_ready(enc_ready),
+    .i_last(cmd_dec_last),
+    .o_data(enc_data),
+    .o_valid(enc_valid),
+    .i_ready(uart_tx_ready),
+    .o_last(enc_last)
+);
 
 endmodule
