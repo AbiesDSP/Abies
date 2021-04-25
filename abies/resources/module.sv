@@ -1,5 +1,5 @@
 module ${module_name} (
-    input wire clk
+    input logic clk
 );
 
 endmodule

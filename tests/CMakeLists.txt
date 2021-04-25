@@ -1,5 +1,9 @@
+set(VINC
+    ${CMAKE_SOURCE_DIR}/framework
+    ${CMAKE_SOURCE_DIR}/tests/tb
+)
 # Verilate and create tests.
-macro(VModule top mod_name test_name vargs)
+macro(VModule floc top mod_name test_name vargs)
     # Tests
     add_library(${test_name} ${test_name}.cpp)
     target_include_directories(${test_name} PRIVATE ${VERILATOR_ROOT}/include)
@@ -11,8 +15,8 @@ macro(VModule top mod_name test_name vargs)
     # Verilated libraries.
     verilate(${test_name} TRACE
         TOP_MODULE ${top}
-        INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/framework
-        SOURCES ${CMAKE_SOURCE_DIR}/framework/${top}.sv
+        INCLUDE_DIRS ${VINC}
+        SOURCES ${CMAKE_SOURCE_DIR}/${floc}/${top}.sv
         DIRECTORY ${CMAKE_BINARY_DIR}/verilated
         PREFIX ${mod_name}
         VERILATOR_ARGS ${vargs}
@@ -41,13 +45,15 @@ add_executable(run_all_tests run_all_tests.cpp)
 target_include_directories(run_all_tests PRIVATE ${VERILATOR_ROOT}/include)
 target_link_libraries(run_all_tests PRIVATE CppUTest CppUTestExt)
 
-VModule(abies_top VAbiesTop test_abies_top -GWFM_FILE="${CMAKE_SOURCE_DIR}/mem/sin_w24_d10.mem")
-# VModule(dds VDds test_dds -GWFM_FILE="${CMAKE_SOURCE_DIR}/mem/sin_w24_d10.mem")
-# VModule(i2s_tb VI2S test_i2s "")
-# VModule(sram_arbiter VSramArbiter test_sram_arbiter "")
-# VModule(fir VFir test_fir -GCOEF_FILE="${CMAKE_SOURCE_DIR}/mem/fir_bp_21.mem")
-# VModule(fifo VFifo test_fifo "")
-# VModule(pwm VPwm test_pwm "")
-VModule(cobs_encode VCobsEncode test_cobs_encode "")
-VModule(cobs_decode VCobsDecode test_cobs_decode "")
-VModule(uart VUart test_uart "")
+VModule(framework abies_top VAbiesTop test_abies_top -GWFM_FILE="${CMAKE_SOURCE_DIR}/mem/sin_w24_d10.mem")
+# VModule(framework dds VDds test_dds -GWFM_FILE="${CMAKE_SOURCE_DIR}/mem/sin_w24_d10.mem")
+# VModule(framework i2s_tb VI2S test_i2s "")
+# VModule(framework sram_arbiter VSramArbiter test_sram_arbiter "")
+# VModule(framework fir VFir test_fir -GCOEF_FILE="${CMAKE_SOURCE_DIR}/mem/fir_bp_21.mem")
+# VModule(framework fifo VFifo test_fifo "")
+# VModule(framework pwm VPwm test_pwm "")
+VModule(framework cobs_encode VCobsEncode test_cobs_encode "")
+VModule(framework cobs_decode VCobsDecode test_cobs_decode "")
+VModule(framework uart VUart test_uart "")
+VModule(framework cmd_parse VCmdParse test_cmd_parse "")
+VModule(tests/tb cobs_cmd_tb VCobsCmdTb test_cobs_cmd "")
