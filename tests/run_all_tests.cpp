@@ -13,6 +13,7 @@ IMPORT_TEST_GROUP(CobsDecodeGroup);
 IMPORT_TEST_GROUP(UartGroup);
 IMPORT_TEST_GROUP(CmdParseGroup);
 IMPORT_TEST_GROUP(CobsCmdTbGroup);
+IMPORT_TEST_GROUP(CobsUartTbGroup);
 
 int main(int argc, char** argv)
 {
