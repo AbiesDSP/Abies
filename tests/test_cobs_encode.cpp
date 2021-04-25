@@ -29,19 +29,28 @@ TEST_GROUP(CobsEncodeGroup)
 
 TEST(CobsEncodeGroup, basic)
 {
-    const uint8_t msg_length = 4;
-    uint8_t cmd[msg_length] = {1, 2, 3, 4};
+    const uint8_t msg_length = 5;
+    uint8_t cmd[msg_length] = {0, 1, 2, 3, 0};
 
     tb->tick(10);
     tb->top->i_ready = 1;
     for (int i = 0; i < msg_length; i++) {
         tb->top->i_valid = 1;
         tb->top->i_data = cmd[i];
-        tb->top->i_last = i==3;
+        tb->top->i_last = i==4;
         tb->tick();
         tb->top->i_valid = 0;
         tb->top->i_last = 0;
+        tb->tick(2);
+    }
+    tb->tick(2);
+    for (int i = 0; i < 10; i++) {
+        while (!tb->top->o_valid){tb->tick();};
+        if (tb->top->o_last) break;
+        tb->top->i_ready = 0;
         tb->tick(9);
+        tb->top->i_ready = 1;
+        tb->tick();
     }
 
     tb->tick(100);

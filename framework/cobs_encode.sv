@@ -17,15 +17,18 @@ module cobs_encode #(
     output logic o_last
 );
 
+localparam LAST_CODE = 8'hfe;
+
 logic [DW-1:0] code = 1;
-logic [DW-1:0] code_addr = 0, wr_addr = 0, rd_addr = 0, rd_data = 0, wr_data = 0;
+logic [DW-1:0] code_addr = 0, wr_addr = 0, wr_next = 1, rd_addr = 0, rd_data = 0, wr_data = 0;
 logic bram_we = 0, bram_rd_en = 0;
 logic [DW-1:0] bram [256];
-logic add_code = 0, append = 0;
+logic add_code = 0, append = 0, last_r = 0;
 logic busy = 0, output_en = 0;
-
+logic valid_r = 0;
 assign o_ready = !busy;
 assign o_data = rd_data;
+// assign o_valid = output_en;
 
 always @(posedge clk) begin
     bram_we <= 0;
@@ -33,53 +36,75 @@ always @(posedge clk) begin
     add_code <= 0;
     append <= 0;
     o_last <= 0;
+    busy <= 0;
+    last_r <= 0;
     o_valid <= output_en;
+    // o_valid <= valid_r;
 
     if (rst) begin
         wr_addr <= 0;
+        wr_next <= 1;
         rd_addr <= 0;
         code_addr <= 0;
         code <= 1;
-        busy <= 0;
     end else if (i_valid & o_ready) begin
         // Start writing at addr 1. addr 0 is the length code.
         bram_we <= 1;
-        wr_addr <= wr_addr + 1;
-        wr_data <= i_data;
-        code <= code + 1;
-        if (i_last) begin
-            busy <= 1;
-            add_code <= 1;
-            code_addr <= wr_addr + 2;
+        last_r <= i_last;
+        // Encode delimeter
+        if (i_data == 0) begin
+            wr_addr <= code_addr;
+            wr_data <= code;
+            code_addr <= wr_next;
+            code <= 1;
+            wr_next <= wr_next + 1;
+        end else begin
+            code <= code + 1;
+            wr_next <= wr_next + 1;
+            wr_addr <= wr_next;
+            wr_data <= i_data;
         end
     end
     
-    // Add the code at the beginning.
-    if (add_code) begin
-        append <= 1;
+    if (last_r) begin
         bram_we <= 1;
-        wr_addr <= 0;
+        wr_addr <= code_addr;
         wr_data <= code;
+        append <= 1;
         // output_en <= 1;
-        // bram_rd_en <= 1;
     end
+    // Add the code at the beginning.
+    // if (add_code | last_r) begin
+    //     bram_we <= 1;
+    //     wr_addr <= code_addr;
+    //     wr_data <= code;
+    //     code_addr <= wr_next;
+    //     code <= 1;
+    //     append <= last_r;
+    //     if (!last_r)
+    //         wr_next <= wr_next + 2;
+    //     else
+    //         wr_next <= wr_next + 1;
+    // end
 
     // Add zero at the end
     if (append) begin
         bram_we <= 1;
-        wr_addr <= code_addr;
+        wr_addr <= wr_next;
         wr_data <= 0;
         bram_rd_en <= 1;
         rd_addr <= 0;
         output_en <= 1;
     end
-
+    if (output_en) begin
+        bram_rd_en <= 1;
+    end
     // Drive outputs
     if (o_valid & i_ready) begin
-        bram_rd_en <= 1;
         rd_addr <= rd_addr + 1;
-        if (rd_addr == code) begin
+        if (rd_addr == wr_addr) begin
             output_en <= 0;
+            o_last <= 1;
         end
     end
 end
@@ -87,8 +112,9 @@ end
 always @(posedge clk) begin
     if (bram_we)
         bram[wr_addr] <= wr_data;
-    // if (bram_rd_en)
-    rd_data <= bram[rd_addr];
+    if (bram_rd_en) begin
+        rd_data <= bram[rd_addr];
+    end
 end
 
 endmodule
