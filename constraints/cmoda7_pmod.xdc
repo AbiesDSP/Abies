@@ -1,5 +1,7 @@
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
+set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 
 # Clock signal 12 MHz
 set_property -dict { PACKAGE_PIN L17   IOSTANDARD LVCMOS33 } [get_ports { clk }]; #IO_L12P_T1_MRCC_14 Sch=gclk
@@ -30,3 +32,4 @@ set_property -dict { PACKAGE_PIN K18   IOSTANDARD LVCMOS33 } [get_ports { adc_sd
 ## UART
 set_property -dict { PACKAGE_PIN J18   IOSTANDARD LVCMOS33 } [get_ports { ftdi_rx }]; #IO_L7N_T1_D10_14 Sch=uart_rxd_out
 set_property -dict { PACKAGE_PIN J17   IOSTANDARD LVCMOS33 } [get_ports { ftdi_tx }]; #IO_L7P_T1_D09_14 Sch=uart_txd_in
+

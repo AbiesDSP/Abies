@@ -1,0 +1,17 @@
+# Default configuration file. Modify this file or specify a different file on the command line.
+project_name:     abies 
+top_module:       abies_top
+work_root:        abies-viv
+
+constraints:
+  - constraints/cmoda7_pmod.xdc
+
+flash: n25q32-3.3v-spi-x1_x2_x4
+
+vivado_location:  'C:\Xilinx\Vivado'
+vivado_version:   '2020.2'
+tool:             vivado
+synth_tool:       vivado
+part_family:      xc7
+part:             xc7a35tcpg236-1
+source_mgmt_mode: All
