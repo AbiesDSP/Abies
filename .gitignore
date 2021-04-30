@@ -5,8 +5,5 @@ __pycache__
 *.log
 *.jou
 *.str
-viv-prj-gen
 docs/html
-abies_tone
-.Xil
 abies-viv
