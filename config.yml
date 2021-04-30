@@ -5,11 +5,13 @@ work_root:        abies-viv
 
 constraints:
   - constraints/cmoda7_pmod.xdc
-  
+
+flash: n25q32-3.3v-spi-x1_x2_x4
+
 vivado_location:  '/tools/Xilinx/Vivado'
 vivado_version:   '2020.2'
 tool:             vivado
 synth_tool:       vivado
-part_family:      xc7
+part_family:      xc7a35t
 part:             xc7a35tcpg236-1
 source_mgmt_mode: All

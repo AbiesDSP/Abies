@@ -12,6 +12,6 @@ vivado_location:  'C:\Xilinx\Vivado'
 vivado_version:   '2020.2'
 tool:             vivado
 synth_tool:       vivado
-part_family:      xc7
+part_family:      xc7a35t
 part:             xc7a35tcpg236-1
 source_mgmt_mode: All
